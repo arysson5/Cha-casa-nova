@@ -18,13 +18,13 @@
     <!-- Meta tags para WhatsApp -->
     <meta property="og:title" content="🏠 Chá de Casa Nova - Aryssone & Nicole">
     <meta property="og:description" content="Você é o nosso convidado especial para viver esse momento importante! 💚 15 de Dezembro às 14:00 - Confirme sua presença!">
-    <meta property="og:image" content="https://aryssonenicole.vercel.app/img/convite-banner.svg">
-    <meta property="og:image:secure_url" content="https://aryssonenicole.vercel.app/img/convite-banner.svg">
+    <meta property="og:image" content="https://aryssonenicole.vercel.app/banner-social.png">
+    <meta property="og:image:secure_url" content="https://aryssonenicole.vercel.app/banner-social.png">
     <meta property="og:url" content="https://aryssonenicole.vercel.app/">
     <meta property="og:type" content="website">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:type" content="image/svg+xml">
+    <meta property="og:image:type" content="image/png">
     <meta property="og:site_name" content="Chá de Casa Nova">
     <meta property="og:locale" content="pt_BR">
 
@@ -32,7 +32,7 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="🏠 Chá de Casa Nova - Aryssone & Nicole">
     <meta name="twitter:description" content="Você é o nosso convidado especial para viver esse momento importante! 💚">
-    <meta name="twitter:image" content="https://aryssonenicole.vercel.app/img/convite-banner.svg">
+    <meta name="twitter:image" content="https://aryssonenicole.vercel.app/banner-social.png">
     <meta name="twitter:image:alt" content="Convite para Chá de Casa Nova de Aryssone e Nicole">
 
     <!-- WhatsApp específico -->
@@ -49,7 +49,7 @@
     <link rel="apple-touch-icon" href="img/convite-banner.svg">
 
     <!-- Preload da imagem do banner -->
-    <link rel="preload" href="img/convite-banner.svg" as="image">
+    <link rel="preload" href="banner-social.png" as="image">
 
     <style>
          :root {
@@ -638,7 +638,7 @@
 <body>
     <!-- Overlay de Entrada -->
     <div class="entrance-overlay" id="entranceOverlay">
-        <img src="img/WhatsApp Image 2025-06-03 at 15.33.06.jpeg" alt="Aryssone e Nicole" class="entrance-photo">
+        <img src="img/WhatsApp Image 2025-06-03 at 15.33.06.png" alt="Aryssone e Nicole" class="entrance-photo">
     </div>
 
     <!-- Floating Hearts Animation -->
@@ -654,7 +654,7 @@
                 <div class="event-title">
                     <i class="fas fa-home"></i> Chá de Casa Nova
                 </div>
-                <img src="img/WhatsApp Image 2025-06-03 at 15.33.06.jpeg" alt="Aryssone e Nicole" class="couple-photo" id="couplePhoto">
+                <img src="img/WhatsApp Image 2025-06-03 at 15.33.06.png" alt="Aryssone e Nicole" class="couple-photo" id="couplePhoto">
                 <div class="couple-names">
                     Aryssone & Nicole
                 </div>
@@ -706,7 +706,7 @@
                     <i class="fas fa-gift detail-icon"></i>
                     <h5>Lista de Presentes</h5>
                     <p>Sua presença já é o nosso maior presente, mas se quiser nos ajudar a mobiliar nossa nova casa:</p>
-                    <a href="https://www.magazineluiza.com.br" target="_blank" class="gifts-link" id="giftsLink">
+                    <a href="https://aryenick.meuchadepanela.com.br/#/" target="_blank" class="gifts-link" id="giftsLink">
                         <i class="fas fa-external-link-alt"></i> Ver Lista de Presentes
                     </a>
                 </div>
@@ -738,8 +738,6 @@
                                 <option value="">Quantas pessoas?</option>
                                 <option value="1">Apenas eu</option>
                                 <option value="2">Eu + 1 acompanhante</option>
-                                <option value="3">Eu + 2 acompanhantes</option>
-                                <option value="4">Eu + 3 acompanhantes</option>
                             </select>
                         </div>
                     </div>
@@ -759,6 +757,15 @@
                     <div class="success-message" id="successMessage">
                         <i class="fas fa-check-circle"></i>
                         <strong>Presença confirmada com sucesso!</strong><br> Enviamos um e-mail de confirmação para você. Mal podemos esperar para te ver! 💕
+                        <div class="gift-reminder" id="giftReminder" style="display: none; margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.9); border-radius: 10px; border: 2px dashed var(--primary-color);">
+                            <i class="fas fa-gift" style="color: var(--primary-color); font-size: 1.2em;"></i>
+                            <strong style="color: var(--primary-color);">Que tal dar uma olhadinha na nossa lista de presentes?</strong><br>
+                            <span style="color: #666; font-size: 0.9em;">Sua contribuição nos ajudará muito a mobiliar nossa nova casa! 🏠✨</span>
+                            <br>
+                            <button class="btn-gift-cta" id="btnGiftCta" style="background: var(--primary-color); color: white; border: none; padding: 8px 20px; border-radius: 20px; margin-top: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                                <i class="fas fa-heart"></i> Ver Lista de Presentes
+                            </button>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -839,6 +846,7 @@
             const submitBtn = document.getElementById('submitBtn');
             const loadingMessage = document.getElementById('loadingMessage');
             const successMessage = document.getElementById('successMessage');
+            const giftReminder = document.getElementById('giftReminder');
 
             // Adicionar animação de celebração ao botão
             submitBtn.classList.add('celebrating');
@@ -875,31 +883,85 @@
                     // Adicionar sparkles ao formulário
                     createSparkles(document.querySelector('.form-section'));
 
+                    // Mostrar lembrete de presentes após 3 segundos
+                    setTimeout(() => {
+                        giftReminder.style.display = 'block';
+                        giftReminder.style.animation = 'zoomIn 0.5s ease-out';
+                        createSparkles(giftReminder);
+
+                        // Fazer o botão de presentes pulsar
+                        const btnGiftCta = document.getElementById('btnGiftCta');
+                        btnGiftCta.style.animation = 'pulse 2s infinite';
+
+                        // Adicionar evento de clique no botão de presentes
+                        btnGiftCta.addEventListener('click', function() {
+                            // Animação especial ao clicar
+                            this.style.transform = 'scale(0.95)';
+                            createSparkles(this);
+
+                            setTimeout(() => {
+                                window.open('https://aryenick.meuchadepanela.com.br/#/', '_blank');
+                                this.style.transform = 'scale(1)';
+                            }, 200);
+                        });
+
+                        // Hover effect no botão
+                        btnGiftCta.addEventListener('mouseenter', function() {
+                            this.style.background = '#9370db';
+                            this.style.transform = 'translateY(-2px)';
+                        });
+
+                        btnGiftCta.addEventListener('mouseleave', function() {
+                            this.style.background = 'var(--primary-color)';
+                            this.style.transform = 'translateY(0)';
+                        });
+
+                    }, 3000);
+
                     // Resetar formulário
                     document.getElementById('rsvpForm').reset();
 
-                    // Redirecionar para lista de presentes após delay
-                    setTimeout(() => {
-                        window.open(document.getElementById('giftsLink').href, '_blank');
-                    }, 3000);
-
-                    // Esconder mensagem de sucesso após 8 segundos
+                    // Esconder mensagem de sucesso após 15 segundos (mais tempo para ver os presentes)
                     setTimeout(() => {
                         successMessage.style.display = 'none';
                         submitBtn.disabled = false;
                         submitBtn.classList.remove('celebrating');
-                    }, 8000);
+                    }, 15000);
 
                 }, function(error) {
                     console.log('Erro ao enviar email:', error);
 
                     // Em caso de erro, ainda mostrar sucesso para o usuário
                     loadingMessage.style.display = 'none';
-                    successMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i><strong>Confirmação recebida!</strong><br>Houve um problema técnico com o email, mas sua presença foi registrada! 💕';
+                    successMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i><strong>Confirmação recebida!</strong><br>Houve um problema técnico com o email, mas sua presença foi registrada! 💕<div class="gift-reminder" id="giftReminder" style="display: none; margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.9); border-radius: 10px; border: 2px dashed var(--primary-color);"><i class="fas fa-gift" style="color: var(--primary-color); font-size: 1.2em;"></i><strong style="color: var(--primary-color);">Que tal dar uma olhadinha na nossa lista de presentes?</strong><br><span style="color: #666; font-size: 0.9em;">Sua contribuição nos ajudará muito a mobiliar nossa nova casa! 🏠✨</span><br><button class="btn-gift-cta" id="btnGiftCtaError" style="background: var(--primary-color); color: white; border: none; padding: 8px 20px; border-radius: 20px; margin-top: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"><i class="fas fa-heart"></i> Ver Lista de Presentes</button></div>';
                     successMessage.style.display = 'block';
 
                     // Criar confetti mesmo com erro
                     createConfetti();
+
+                    // Mostrar lembrete de presentes após 3 segundos (mesmo com erro)
+                    setTimeout(() => {
+                        const giftReminderError = document.getElementById('giftReminder');
+                        const btnGiftCtaError = document.getElementById('btnGiftCtaError');
+
+                        if (giftReminderError) {
+                            giftReminderError.style.display = 'block';
+                            giftReminderError.style.animation = 'zoomIn 0.5s ease-out';
+                            createSparkles(giftReminderError);
+
+                            btnGiftCtaError.style.animation = 'pulse 2s infinite';
+
+                            btnGiftCtaError.addEventListener('click', function() {
+                                this.style.transform = 'scale(0.95)';
+                                createSparkles(this);
+
+                                setTimeout(() => {
+                                    window.open('https://aryenick.meuchadepanela.com.br/#/', '_blank');
+                                    this.style.transform = 'scale(1)';
+                                }, 200);
+                            });
+                        }
+                    }, 3000);
 
                     // Resetar formulário
                     document.getElementById('rsvpForm').reset();
@@ -908,7 +970,7 @@
                         successMessage.style.display = 'none';
                         submitBtn.disabled = false;
                         submitBtn.classList.remove('celebrating');
-                    }, 8000);
+                    }, 15000);
                 });
         });
 

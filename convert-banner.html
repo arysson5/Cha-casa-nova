@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Converter Banner para PNG</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+        }
+        
+        .controls {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        button {
+            background: #2d5a27;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        
+        button:hover {
+            background: #4a7c59;
+        }
+        
+        .banner {
+            width: 1200px;
+            height: 630px;
+            background: linear-gradient(135deg, #2d5a27 0%, #4a7c59 50%, #6b8e23 100%);
+            position: relative;
+            overflow: hidden;
+            margin: 0 auto;
+            font-family: 'Georgia', serif;
+        }
+        
+        .banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.1) 2px, transparent 2px), radial-gradient(circle at 80% 80%, rgba(255, 255, 255, 0.1) 2px, transparent 2px);
+            background-size: 80px 80px;
+            opacity: 0.3;
+        }
+        
+        .bg-decoration {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .wave-left {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 200px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            clip-path: polygon(0 0, 70% 20%, 50% 50%, 70% 80%, 0 100%);
+        }
+        
+        .wave-right {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 200px;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.05);
+            clip-path: polygon(30% 20%, 100% 0, 100% 100%, 30% 80%, 50% 50%);
+        }
+        
+        .main-card {
+            position: absolute;
+            left: 80px;
+            top: 60px;
+            width: 1040px;
+            height: 510px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        .photo-container {
+            position: absolute;
+            right: 100px;
+            top: 80px;
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            border: 4px solid #2d5a27;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .photo-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .content {
+            position: absolute;
+            left: 40px;
+            top: 40px;
+            width: 600px;
+        }
+        
+        .title {
+            font-size: 28px;
+            color: #2d5a27;
+            font-weight: 300;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .names {
+            font-size: 48px;
+            color: #2d5a27;
+            font-weight: bold;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        .description {
+            font-size: 18px;
+            color: #495057;
+            line-height: 1.4;
+            margin-bottom: 30px;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .date-box {
+            background: #2d5a27;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 20px;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 20px;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .location {
+            font-size: 16px;
+            color: #2d5a27;
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .cta {
+            font-size: 14px;
+            color: #495057;
+            font-family: 'Arial', sans-serif;
+        }
+        
+        .decoration {
+            position: absolute;
+        }
+        
+        .leaf-1 {
+            left: 120px;
+            top: 120px;
+            width: 20px;
+            height: 20px;
+            background: #4a7c59;
+            border-radius: 50% 0;
+            transform: rotate(45deg);
+            opacity: 0.6;
+        }
+        
+        .leaf-2 {
+            left: 140px;
+            top: 140px;
+            width: 15px;
+            height: 15px;
+            background: #6b8e23;
+            border-radius: 50% 0;
+            transform: rotate(45deg);
+            opacity: 0.6;
+        }
+        
+        .leaf-3 {
+            right: 120px;
+            bottom: 120px;
+            width: 20px;
+            height: 20px;
+            background: #4a7c59;
+            border-radius: 50% 0;
+            transform: rotate(225deg);
+            opacity: 0.6;
+        }
+        
+        .leaf-4 {
+            right: 140px;
+            bottom: 140px;
+            width: 15px;
+            height: 15px;
+            background: #6b8e23;
+            border-radius: 50% 0;
+            transform: rotate(225deg);
+            opacity: 0.6;
+        }
+        
+        .dot {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.5;
+        }
+        
+        .dot-1 {
+            left: 450px;
+            top: 380px;
+            width: 6px;
+            height: 6px;
+            background: #4a7c59;
+        }
+        
+        .dot-2 {
+            left: 480px;
+            top: 400px;
+            width: 4px;
+            height: 4px;
+            background: #6b8e23;
+        }
+        
+        .dot-3 {
+            left: 520px;
+            top: 420px;
+            width: 6px;
+            height: 6px;
+            background: #2d5a27;
+        }
+        
+        #status {
+            text-align: center;
+            margin: 20px 0;
+            font-weight: bold;
+        }
+        
+        .success {
+            color: #2d5a27;
+        }
+        
+        .error {
+            color: #dc3545;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="controls">
+        <h1>Converter Banner para PNG</h1>
+        <button onclick="convertToPNG()">Gerar PNG do Banner</button>
+        <button onclick="downloadPNG()">Download PNG</button>
+        <div id="status"></div>
+    </div>
+
+    <div class="banner" id="banner">
+        <div class="bg-decoration">
+            <div class="wave-left"></div>
+            <div class="wave-right"></div>
+        </div>
+
+        <div class="main-card">
+            <div class="content">
+                <div class="title">chá de casa nova</div>
+                <div class="names">ARYSSONE<br>NICOLE</div>
+                <div class="description">
+                    Você é o nosso convidado especial para viver<br> esse momento importante, enquanto nos<br> preparamos para essa nova etapa.
+                </div>
+                <div class="date-box">15 DE DEZEMBRO ÀS 14:00</div>
+                <div class="location">Rua das Flores, 123 - São Paulo</div>
+                <div class="cta">
+                    CONFIRME A SUA PRESENÇA NO LINK<br> ABAIXO:
+                </div>
+            </div>
+
+            <div class="photo-container">
+                <img src="img/WhatsApp Image 2025-06-03 at 15.33.06.png" alt="Aryssone e Nicole" crossorigin="anonymous">
+            </div>
+
+            <!-- Decorações -->
+            <div class="decoration leaf-1"></div>
+            <div class="decoration leaf-2"></div>
+            <div class="decoration leaf-3"></div>
+            <div class="decoration leaf-4"></div>
+
+            <div class="dot dot-1"></div>
+            <div class="dot dot-2"></div>
+            <div class="dot dot-3"></div>
+        </div>
+    </div>
+
+    <script>
+        let generatedCanvas = null;
+
+        async function convertToPNG() {
+            const status = document.getElementById('status');
+            status.innerHTML = 'Gerando PNG...';
+            status.className = '';
+
+            try {
+                const banner = document.getElementById('banner');
+
+                // Configurações para melhor qualidade
+                const canvas = await html2canvas(banner, {
+                    width: 1200,
+                    height: 630,
+                    scale: 2, // Para melhor qualidade
+                    useCORS: true,
+                    allowTaint: true,
+                    backgroundColor: null,
+                    logging: false
+                });
+
+                generatedCanvas = canvas;
+
+                // Mostrar preview
+                const existingPreview = document.getElementById('preview');
+                if (existingPreview) {
+                    existingPreview.remove();
+                }
+
+                const preview = document.createElement('div');
+                preview.id = 'preview';
+                preview.style.textAlign = 'center';
+                preview.style.marginTop = '20px';
+
+                const previewTitle = document.createElement('h3');
+                previewTitle.textContent = 'Preview do PNG:';
+                preview.appendChild(previewTitle);
+
+                canvas.style.maxWidth = '100%';
+                canvas.style.border = '2px solid #2d5a27';
+                canvas.style.borderRadius = '10px';
+                preview.appendChild(canvas);
+
+                document.body.appendChild(preview);
+
+                status.innerHTML = 'PNG gerado com sucesso! Clique em "Download PNG" para baixar.';
+                status.className = 'success';
+
+            } catch (error) {
+                console.error('Erro ao gerar PNG:', error);
+                status.innerHTML = 'Erro ao gerar PNG: ' + error.message;
+                status.className = 'error';
+            }
+        }
+
+        function downloadPNG() {
+            if (!generatedCanvas) {
+                alert('Primeiro gere o PNG clicando em "Gerar PNG do Banner"');
+                return;
+            }
+
+            // Criar link de download
+            const link = document.createElement('a');
+            link.download = 'banner-social.png';
+            link.href = generatedCanvas.toDataURL('image/png');
+
+            // Simular clique para download
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            document.getElementById('status').innerHTML = 'Download iniciado!';
+            document.getElementById('status').className = 'success';
+        }
+
+        // Gerar automaticamente ao carregar a página
+        window.addEventListener('load', function() {
+            setTimeout(convertToPNG, 1000);
+        });
+    </script>
+</body>
+
+</html>
