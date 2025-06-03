@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chá de Casa Nova - Aryssone & Nicole</title>
+    <title>Chá de Casa Nova - Arrysson & Nicole</title>
 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -16,40 +16,40 @@
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <!-- Meta tags para WhatsApp -->
-    <meta property="og:title" content="🏠 Chá de Casa Nova - Aryssone & Nicole">
-    <meta property="og:description" content="Você é o nosso convidado especial para viver esse momento importante! 💚 15 de Dezembro às 14:00 - Confirme sua presença!">
-    <meta property="og:image" content="https://aryssonenicole.vercel.app/banner-social.png">
-    <meta property="og:image:secure_url" content="https://aryssonenicole.vercel.app/banner-social.png">
+    <meta property="og:title" content="�� Chá de Casa Nova - Arrysson & Nicole">
+    <meta property="og:description" content="Você é o nosso convidado especial para viver esse momento importante! 💚 13 de Julho às 13:00 - Leve Sua Bebida 🍻">
+    <meta property="og:image" content="https://aryssonenicole.vercel.app/banner-convite.png">
+    <meta property="og:image:secure_url" content="https://aryssonenicole.vercel.app/banner-convite.png">
     <meta property="og:url" content="https://aryssonenicole.vercel.app/">
     <meta property="og:type" content="website">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
     <meta property="og:image:type" content="image/png">
-    <meta property="og:site_name" content="Chá de Casa Nova">
+    <meta property="og:site_name" content="Chá de Casa Nova - Arrysson & Nicole">
     <meta property="og:locale" content="pt_BR">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="🏠 Chá de Casa Nova - Aryssone & Nicole">
-    <meta name="twitter:description" content="Você é o nosso convidado especial para viver esse momento importante! 💚">
-    <meta name="twitter:image" content="https://aryssonenicole.vercel.app/banner-social.png">
-    <meta name="twitter:image:alt" content="Convite para Chá de Casa Nova de Aryssone e Nicole">
+    <meta name="twitter:title" content="�� Chá de Casa Nova - Arrysson & Nicole">
+    <meta name="twitter:description" content="13 de Julho às 13:00 - Rua Fernando Sanabria, 87 - Jardim Umuarama 🍻 Leve Sua Bebida">
+    <meta name="twitter:image" content="https://aryssonenicole.vercel.app/banner-convite.png">
+    <meta name="twitter:image:alt" content="Convite para Chá de Casa Nova de Arrysson e Nicole - 13 de Julho às 13:00">
 
     <!-- WhatsApp específico -->
-    <meta property="og:image:alt" content="Convite para Chá de Casa Nova de Aryssone e Nicole - 15 de Dezembro às 14:00">
+    <meta property="og:image:alt" content="Convite para Chá de Casa Nova de Arrysson e Nicole - 13 de Julho às 13:00 - Leve Sua Bebida">
 
     <!-- Facebook específico -->
     <meta property="fb:app_id" content="your_app_id">
 
     <!-- Telegram -->
-    <meta property="telegram:channel" content="@aryssonenicole">
+    <meta property="telegram:channel" content="@aryssonnicole">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/svg+xml" href="img/convite-banner.svg">
-    <link rel="apple-touch-icon" href="img/convite-banner.svg">
+    <link rel="icon" type="image/png" href="banner-convite.png">
+    <link rel="apple-touch-icon" href="banner-convite.png">
 
     <!-- Preload da imagem do banner -->
-    <link rel="preload" href="banner-social.png" as="image">
+    <link rel="preload" href="banner-convite.png" as="image">
 
     <style>
          :root {
@@ -578,6 +578,13 @@
             .map-embed {
                 height: 250px;
             }
+            .countdown-display {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .countdown-item {
+                font-size: 1.2rem;
+            }
         }
         /* Overlay de entrada com fundo preto */
         
@@ -632,13 +639,192 @@
                 filter: brightness(1);
             }
         }
+        /* Countdown styles */
+        
+        .countdown-display {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .countdown-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(138, 43, 226, 0.1);
+            padding: 15px;
+            border-radius: 10px;
+            min-width: 80px;
+        }
+        
+        .countdown-item span {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .countdown-item small {
+            font-size: 0.8rem;
+            color: var(--text-dark);
+            font-weight: normal;
+        }
+        /* Modal styles */
+        
+        .gift-modal {
+            display: none;
+            position: fixed;
+            z-index: 10001;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            animation: fadeIn 0.3s ease-out;
+        }
+        
+        .gift-modal-content {
+            background-color: var(--background-light);
+            margin: 5% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            animation: slideInDown 0.5s ease-out;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+        
+        .gift-modal-header {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            position: relative;
+        }
+        
+        .gift-modal-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="gifts" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><text x="10" y="15" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="12">🎁</text></pattern></defs><rect width="100" height="100" fill="url(%23gifts)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .gift-modal-header h3 {
+            margin: 0;
+            font-size: 1.8rem;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .gift-modal-header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .gift-modal-body {
+            padding: 30px 20px;
+            text-align: center;
+        }
+        
+        .gift-modal-close {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            font-size: 28px;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            z-index: 3;
+            transition: transform 0.2s ease;
+        }
+        
+        .gift-modal-close:hover {
+            transform: scale(1.2);
+        }
+        
+        .gift-button {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            margin: 15px 10px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gift-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s;
+        }
+        
+        .gift-button:hover::before {
+            left: 100%;
+        }
+        
+        .gift-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(138, 43, 226, 0.4);
+            color: white;
+        }
+        
+        .later-button {
+            background: transparent;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+        }
+        
+        .later-button:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
     </style>
 </head>
 
 <body>
     <!-- Overlay de Entrada -->
     <div class="entrance-overlay" id="entranceOverlay">
-        <img src="img/WhatsApp Image 2025-06-03 at 15.33.06.png" alt="Aryssone e Nicole" class="entrance-photo">
+        <img src="img/WhatsApp Image 2025-06-03 at 15.33.06.png" alt="Arrysson e Nicole" class="entrance-photo">
     </div>
 
     <!-- Floating Hearts Animation -->
@@ -654,9 +840,9 @@
                 <div class="event-title">
                     <i class="fas fa-home"></i> Chá de Casa Nova
                 </div>
-                <img src="img/WhatsApp Image 2025-06-03 at 15.33.06.png" alt="Aryssone e Nicole" class="couple-photo" id="couplePhoto">
+                <img src="img/WhatsApp Image 2025-06-03 at 15.33.06.png" alt="Arrysson e Nicole" class="couple-photo" id="couplePhoto">
                 <div class="couple-names">
-                    Aryssone & Nicole
+                    Arrysson & Nicole
                 </div>
                 <p class="lead">Venha celebrar conosco este momento especial!</p>
             </div>
@@ -668,14 +854,14 @@
                         <div class="detail-item">
                             <i class="fas fa-calendar-alt detail-icon"></i>
                             <strong>Data:</strong><br>
-                            <span id="eventDate">Sábado, 15 de Dezembro de 2024</span>
+                            <span id="eventDate">Domingo, 13 de Julho de 2025</span>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="detail-item">
                             <i class="fas fa-clock detail-icon"></i>
                             <strong>Horário:</strong><br>
-                            <span id="eventTime">14:00 às 18:00</span>
+                            <span id="eventTime">13:00 às 18:00</span>
                         </div>
                     </div>
                 </div>
@@ -683,13 +869,13 @@
                 <div class="detail-item">
                     <i class="fas fa-map-marker-alt detail-icon"></i>
                     <strong>Local:</strong><br>
-                    <span id="eventLocation">Nossa Nova Casa - Rua das Flores, 123, São Paulo - SP</span>
+                    <span id="eventLocation">Rua Fernando Sanabria, 87 - Jardim Umuarama</span>
                     <br><br>
                     <div class="d-flex flex-wrap gap-2">
-                        <a href="https://maps.google.com/?q=Rua+das+Flores+123+São+Paulo+SP" target="_blank" class="map-button">
+                        <a href="https://maps.google.com/?q=Rua+Fernando+Sanabria+87+Jardim+Umuarama" target="_blank" class="map-button">
                             <i class="fas fa-map"></i> Google Maps
                         </a>
-                        <a href="https://waze.com/ul?q=Rua+das+Flores+123+São+Paulo+SP" target="_blank" class="map-button">
+                        <a href="https://waze.com/ul?q=Rua+Fernando+Sanabria+87+Jardim+Umuarama" target="_blank" class="map-button">
                             <i class="fab fa-waze"></i> Waze
                         </a>
                     </div>
@@ -700,6 +886,41 @@
                             allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
                         </iframe>
                     </div>
+                </div>
+
+                <!-- Contagem Regressiva -->
+                <div class="detail-item text-center" id="countdownSection">
+                    <i class="fas fa-hourglass-half detail-icon"></i>
+                    <h5>Contagem Regressiva</h5>
+                    <div id="countdown" style="font-size: 2rem; font-weight: bold; color: var(--primary-color); margin: 20px 0;">
+                        <div class="countdown-display">
+                            <div class="countdown-item">
+                                <span id="days">00</span>
+                                <small>Dias</small>
+                            </div>
+                            <div class="countdown-item">
+                                <span id="hours">00</span>
+                                <small>Horas</small>
+                            </div>
+                            <div class="countdown-item">
+                                <span id="minutes">00</span>
+                                <small>Minutos</small>
+                            </div>
+                            <div class="countdown-item">
+                                <span id="seconds">00</span>
+                                <small>Segundos</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alerta sobre bebida -->
+                <div class="detail-item text-center" style="background: #fff3cd; border-left-color: #ffc107; border: 1px solid #ffeaa7;">
+                    <i class="fas fa-beer detail-icon" style="color: #856404;"></i>
+                    <h6 style="color: #856404; margin-bottom: 10px;">🍻 Leve Sua Bebida</h6>
+                    <p style="color: #856404; font-size: 0.9em; margin: 0;">
+                        Para tornar a festa ainda mais especial, pedimos que cada convidado traga sua bebida preferida!
+                    </p>
                 </div>
 
                 <div class="detail-item text-center">
@@ -772,6 +993,33 @@
         </div>
     </div>
 
+    <!-- Modal de Presentes -->
+    <div id="giftModal" class="gift-modal">
+        <div class="gift-modal-content">
+            <div class="gift-modal-header">
+                <span class="gift-modal-close" id="closeGiftModal">&times;</span>
+                <h3>🎁 Presença Confirmada!</h3>
+                <p>Que alegria ter você conosco neste momento especial!</p>
+            </div>
+            <div class="gift-modal-body">
+                <p style="margin-bottom: 20px; color: #666; font-size: 1.1em;">
+                    Sua presença já é o nosso maior presente, mas se quiser nos ajudar a mobiliar nossa nova casa...
+                </p>
+                <div style="font-size: 3rem; margin: 20px 0;">🏠💜</div>
+                <p style="color: var(--primary-color); font-weight: 600; margin-bottom: 25px;">
+                    Que tal dar uma olhadinha na nossa lista de presentes?
+                </p>
+                <a href="https://aryenick.meuchadepanela.com.br/#/" target="_blank" class="gift-button" id="viewGiftsBtn">
+                    <i class="fas fa-gift"></i> Ver Lista de Presentes
+                </a>
+                <br>
+                <button class="gift-button later-button" id="maybeLaterBtn">
+                    <i class="fas fa-clock"></i> Talvez Mais Tarde
+                </button>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -780,6 +1028,75 @@
         (function() {
             emailjs.init("YOUR_PUBLIC_KEY"); // Substitua pela sua chave pública do EmailJS
         })();
+
+        // Countdown Timer
+        function updateCountdown() {
+            // Data do evento: 13 de julho de 2024 às 13:00
+            const eventDate = new Date('2025-07-13T13:00:00').getTime();
+            const now = new Date().getTime();
+            const distance = eventDate - now;
+
+            if (distance > 0) {
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('days').textContent = days.toString().padStart(2, '0');
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            } else {
+                // Evento já passou
+                document.getElementById('countdownSection').innerHTML =
+                    '<div style="text-align: center; padding: 20px;"><h4 style="color: var(--primary-color);">🎉 O grande dia chegou! 🎉</h4></div>';
+            }
+        }
+
+        // Atualizar countdown a cada segundo
+        setInterval(updateCountdown, 1000);
+        updateCountdown(); // Inicializar imediatamente
+
+        // Modal functions
+        function showGiftModal() {
+            const modal = document.getElementById('giftModal');
+            modal.style.display = 'block';
+
+            // Adicionar confetti
+            createConfetti();
+
+            // Sparkles no modal
+            setTimeout(() => {
+                createSparkles(document.querySelector('.gift-modal-content'));
+            }, 500);
+        }
+
+        function hideGiftModal() {
+            const modal = document.getElementById('giftModal');
+            modal.style.display = 'none';
+        }
+
+        // Event listeners para o modal
+        document.getElementById('closeGiftModal').addEventListener('click', hideGiftModal);
+        document.getElementById('maybeLaterBtn').addEventListener('click', hideGiftModal);
+
+        document.getElementById('viewGiftsBtn').addEventListener('click', function() {
+            // Adicionar efeito especial ao clicar
+            createSparkles(this);
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+                hideGiftModal();
+            }, 200);
+        });
+
+        // Fechar modal clicando fora dele
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('giftModal');
+            if (event.target === modal) {
+                hideGiftModal();
+            }
+        });
 
         // Floating hearts animation
         function createFloatingHeart() {
@@ -846,7 +1163,6 @@
             const submitBtn = document.getElementById('submitBtn');
             const loadingMessage = document.getElementById('loadingMessage');
             const successMessage = document.getElementById('successMessage');
-            const giftReminder = document.getElementById('giftReminder');
 
             // Adicionar animação de celebração ao botão
             submitBtn.classList.add('celebrating');
@@ -873,104 +1189,33 @@
                 .then(function(response) {
                     console.log('Email enviado com sucesso!', response.status, response.text);
 
-                    // Esconder loading e mostrar sucesso com animações
+                    // Esconder loading
                     loadingMessage.style.display = 'none';
-                    successMessage.style.display = 'block';
 
-                    // Criar confetti
-                    createConfetti();
-
-                    // Adicionar sparkles ao formulário
-                    createSparkles(document.querySelector('.form-section'));
-
-                    // Mostrar lembrete de presentes após 3 segundos
+                    // Mostrar modal de presentes em vez da mensagem antiga
                     setTimeout(() => {
-                        giftReminder.style.display = 'block';
-                        giftReminder.style.animation = 'zoomIn 0.5s ease-out';
-                        createSparkles(giftReminder);
-
-                        // Fazer o botão de presentes pulsar
-                        const btnGiftCta = document.getElementById('btnGiftCta');
-                        btnGiftCta.style.animation = 'pulse 2s infinite';
-
-                        // Adicionar evento de clique no botão de presentes
-                        btnGiftCta.addEventListener('click', function() {
-                            // Animação especial ao clicar
-                            this.style.transform = 'scale(0.95)';
-                            createSparkles(this);
-
-                            setTimeout(() => {
-                                window.open('https://aryenick.meuchadepanela.com.br/#/', '_blank');
-                                this.style.transform = 'scale(1)';
-                            }, 200);
-                        });
-
-                        // Hover effect no botão
-                        btnGiftCta.addEventListener('mouseenter', function() {
-                            this.style.background = '#9370db';
-                            this.style.transform = 'translateY(-2px)';
-                        });
-
-                        btnGiftCta.addEventListener('mouseleave', function() {
-                            this.style.background = 'var(--primary-color)';
-                            this.style.transform = 'translateY(0)';
-                        });
-
-                    }, 3000);
+                        showGiftModal();
+                    }, 1000);
 
                     // Resetar formulário
                     document.getElementById('rsvpForm').reset();
-
-                    // Esconder mensagem de sucesso após 15 segundos (mais tempo para ver os presentes)
-                    setTimeout(() => {
-                        successMessage.style.display = 'none';
-                        submitBtn.disabled = false;
-                        submitBtn.classList.remove('celebrating');
-                    }, 15000);
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('celebrating');
 
                 }, function(error) {
                     console.log('Erro ao enviar email:', error);
 
-                    // Em caso de erro, ainda mostrar sucesso para o usuário
+                    // Em caso de erro, ainda mostrar modal para o usuário
                     loadingMessage.style.display = 'none';
-                    successMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i><strong>Confirmação recebida!</strong><br>Houve um problema técnico com o email, mas sua presença foi registrada! 💕<div class="gift-reminder" id="giftReminder" style="display: none; margin-top: 15px; padding: 15px; background: rgba(255,255,255,0.9); border-radius: 10px; border: 2px dashed var(--primary-color);"><i class="fas fa-gift" style="color: var(--primary-color); font-size: 1.2em;"></i><strong style="color: var(--primary-color);">Que tal dar uma olhadinha na nossa lista de presentes?</strong><br><span style="color: #666; font-size: 0.9em;">Sua contribuição nos ajudará muito a mobiliar nossa nova casa! 🏠✨</span><br><button class="btn-gift-cta" id="btnGiftCtaError" style="background: var(--primary-color); color: white; border: none; padding: 8px 20px; border-radius: 20px; margin-top: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"><i class="fas fa-heart"></i> Ver Lista de Presentes</button></div>';
-                    successMessage.style.display = 'block';
 
-                    // Criar confetti mesmo com erro
-                    createConfetti();
-
-                    // Mostrar lembrete de presentes após 3 segundos (mesmo com erro)
                     setTimeout(() => {
-                        const giftReminderError = document.getElementById('giftReminder');
-                        const btnGiftCtaError = document.getElementById('btnGiftCtaError');
-
-                        if (giftReminderError) {
-                            giftReminderError.style.display = 'block';
-                            giftReminderError.style.animation = 'zoomIn 0.5s ease-out';
-                            createSparkles(giftReminderError);
-
-                            btnGiftCtaError.style.animation = 'pulse 2s infinite';
-
-                            btnGiftCtaError.addEventListener('click', function() {
-                                this.style.transform = 'scale(0.95)';
-                                createSparkles(this);
-
-                                setTimeout(() => {
-                                    window.open('https://aryenick.meuchadepanela.com.br/#/', '_blank');
-                                    this.style.transform = 'scale(1)';
-                                }, 200);
-                            });
-                        }
-                    }, 3000);
+                        showGiftModal();
+                    }, 1000);
 
                     // Resetar formulário
                     document.getElementById('rsvpForm').reset();
-
-                    setTimeout(() => {
-                        successMessage.style.display = 'none';
-                        submitBtn.disabled = false;
-                        submitBtn.classList.remove('celebrating');
-                    }, 15000);
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('celebrating');
                 });
         });
 
@@ -1005,7 +1250,7 @@
 
         // WhatsApp sharing functionality
         function shareOnWhatsApp() {
-            const message = `🏠 Você está convidado para o Chá de Casa Nova da Aryssone & Nicole! 💜\n\n📅 Data: ${document.getElementById('eventDate').textContent}\n⏰ Horário: ${document.getElementById('eventTime').textContent}\n📍 Local: ${document.getElementById('eventLocation').textContent}\n\n🎁 Confirme sua presença: ${window.location.href}`;
+            const message = `🏠 Você está convidado para o Chá de Casa Nova do Arrysson & Nicole! 💜\n\n📅 Data: ${document.getElementById('eventDate').textContent}\n⏰ Horário: ${document.getElementById('eventTime').textContent}\n📍 Local: ${document.getElementById('eventLocation').textContent}\n\n🍻 Lembre-se: Leve Sua Bebida!\n\n🎁 Confirme sua presença: ${window.location.href}`;
 
             const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
             window.open(whatsappUrl, '_blank');
