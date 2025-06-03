@@ -818,6 +818,316 @@
                 opacity: 1;
             }
         }
+        /* Cursor personalizado e efeitos de mouse */
+        
+        .gift-magnet {
+            position: relative;
+            overflow: visible !important;
+        }
+        
+        .gift-magnet::before {
+            content: '🎁';
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0;
+            animation: floatAroundGift 3s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 5;
+        }
+        
+        .gift-magnet:hover::before {
+            opacity: 1;
+        }
+        
+        @keyframes floatAroundGift {
+            0% {
+                transform: translate(-30px, -20px) rotate(0deg);
+            }
+            25% {
+                transform: translate(30px, -20px) rotate(90deg);
+            }
+            50% {
+                transform: translate(30px, 20px) rotate(180deg);
+            }
+            75% {
+                transform: translate(-30px, 20px) rotate(270deg);
+            }
+            100% {
+                transform: translate(-30px, -20px) rotate(360deg);
+            }
+        }
+        /* Partículas que seguem o mouse */
+        
+        .mouse-trail {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9998;
+            width: 6px;
+            height: 6px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            opacity: 0.8;
+            animation: trailFade 1s ease-out forwards;
+        }
+        
+        @keyframes trailFade {
+            0% {
+                transform: scale(1);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(0);
+                opacity: 0;
+            }
+        }
+        /* Indicadores direcionais */
+        
+        .gift-pointer {
+            position: fixed;
+            pointer-events: none;
+            z-index: 9997;
+            font-size: 2rem;
+            opacity: 0;
+            transition: all 0.3s ease;
+            animation: pointToGift 2s ease-in-out infinite;
+        }
+        
+        @keyframes pointToGift {
+            0%,
+            100% {
+                transform: scale(1) rotate(0deg);
+                opacity: 0.7;
+            }
+            50% {
+                transform: scale(1.2) rotate(10deg);
+                opacity: 1;
+            }
+        }
+        /* Efeito de atração magnética */
+        
+        .magnetic-field {
+            position: absolute;
+            top: -20px;
+            left: -20px;
+            right: -20px;
+            bottom: -20px;
+            border: 2px dashed var(--primary-color);
+            border-radius: 35px;
+            opacity: 0;
+            animation: magneticPulse 2s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes magneticPulse {
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 0.3;
+                border-color: var(--primary-color);
+            }
+            50% {
+                transform: scale(1.1);
+                opacity: 0.7;
+                border-color: var(--secondary-color);
+            }
+        }
+        /* Botão de presentes melhorado */
+        
+        .gifts-link-enhanced {
+            position: relative;
+            overflow: visible;
+            transform: scale(1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: giftButtonPulse 3s ease-in-out infinite;
+        }
+        
+        @keyframes giftButtonPulse {
+            0%,
+            100% {
+                box-shadow: 0 5px 15px var(--shadow-color), 0 0 0 0 rgba(138, 43, 226, 0.4);
+            }
+            50% {
+                box-shadow: 0 8px 25px var(--shadow-color), 0 0 0 10px rgba(138, 43, 226, 0);
+            }
+        }
+        
+        .gifts-link-enhanced:hover {
+            transform: scale(1.05) translateY(-2px);
+            animation-play-state: paused;
+            box-shadow: 0 10px 30px var(--shadow-color), 0 0 0 0 rgba(138, 43, 226, 0.4);
+        }
+        /* Estrelas que aparecem ao redor do botão */
+        
+        .star-particle {
+            position: absolute;
+            pointer-events: none;
+            color: var(--primary-color);
+            font-size: 1rem;
+            opacity: 0;
+            animation: starBurst 2s ease-out forwards;
+        }
+        
+        @keyframes starBurst {
+            0% {
+                transform: scale(0) rotate(0deg);
+                opacity: 1;
+            }
+            50% {
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5) rotate(360deg);
+                opacity: 0;
+            }
+        }
+        /* Celebration mode */
+        
+        .celebration-mode {
+            animation: celebrationBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+        
+        @keyframes celebrationBounce {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2) rotate(5deg);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        /* Setas indicativas */
+        
+        .arrow-indicator {
+            position: absolute;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            opacity: 0;
+            animation: arrowBounce 1.5s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes arrowBounce {
+            0%,
+            100% {
+                transform: translateY(0) scale(1);
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-10px) scale(1.1);
+                opacity: 1;
+            }
+        }
+        
+        .arrow-left {
+            left: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .arrow-right {
+            right: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        
+        .arrow-top {
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        .arrow-bottom {
+            bottom: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        /* Efeito de brilho */
+        
+        .gift-glow {
+            position: relative;
+        }
+        
+        .gift-glow::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: inherit;
+            background: linear-gradient(45deg, transparent, rgba(138, 43, 226, 0.3), transparent);
+            opacity: 0;
+            animation: glowSweep 3s ease-in-out infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes glowSweep {
+            0%,
+            100% {
+                opacity: 0;
+                transform: translateX(-100%);
+            }
+            50% {
+                opacity: 1;
+                transform: translateX(100%);
+            }
+        }
+        /* Indicadores de atenção */
+        
+        .attention-blink {
+            animation: attentionBlink 2s ease-in-out infinite;
+        }
+        
+        @keyframes attentionBlink {
+            0%,
+            50%,
+            100% {
+                opacity: 1;
+            }
+            25%,
+            75% {
+                opacity: 0.3;
+            }
+        }
+        /* Efeito de chamada especial */
+        
+        .call-to-action {
+            position: relative;
+        }
+        
+        .call-to-action::before {
+            content: '👆 CLIQUE AQUI 👆';
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            opacity: 0;
+            animation: callToAction 4s ease-in-out infinite;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        
+        @keyframes callToAction {
+            0%,
+            70%,
+            100% {
+                opacity: 0;
+                transform: translateX(-50%) translateY(10px);
+            }
+            15%,
+            55% {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+        }
     </style>
 </head>
 
@@ -923,13 +1233,30 @@
                     </p>
                 </div>
 
-                <div class="detail-item text-center">
+                <div class="detail-item text-center gift-magnet" id="giftsSection">
                     <i class="fas fa-gift detail-icon"></i>
                     <h5>Lista de Presentes</h5>
                     <p>Sua presença já é o nosso maior presente, mas se quiser nos ajudar a mobiliar nossa nova casa:</p>
-                    <a href="https://aryenick.meuchadepanela.com.br/#/" target="_blank" class="gifts-link" id="giftsLink">
-                        <i class="fas fa-external-link-alt"></i> Ver Lista de Presentes
-                    </a>
+                    <div style="position: relative; display: inline-block;">
+                        <!-- Campo magnético -->
+                        <div class="magnetic-field"></div>
+
+                        <!-- Setas indicativas -->
+                        <div class="arrow-indicator arrow-left">👈</div>
+                        <div class="arrow-indicator arrow-right">👉</div>
+                        <div class="arrow-indicator arrow-top">👆</div>
+                        <div class="arrow-indicator arrow-bottom">👇</div>
+
+                        <!-- Botão principal com efeitos -->
+                        <a href="https://aryenick.meuchadepanela.com.br/#/" target="_blank" class="gifts-link gifts-link-enhanced gift-glow" id="giftsLink">
+                            <i class="fas fa-external-link-alt"></i> Ver Lista de Presentes
+                        </a>
+                    </div>
+
+                    <!-- Mensagem motivacional -->
+                    <div style="margin-top: 15px; font-size: 0.9em; color: var(--primary-color); font-weight: 600;" id="giftMotivation">
+                        ✨ Clique e nos ajude a mobiliar nossa nova casa! ✨
+                    </div>
                 </div>
             </div>
 
@@ -1029,7 +1356,7 @@
     <script>
         // Inicializar EmailJS
         (function() {
-            emailjs.init("YOUR_PUBLIC_KEY"); // Substitua pela sua chave pública do EmailJS
+            emailjs.init("_LSiXJKxCx1Xy1pRK"); // Substitua pela sua chave pública do EmailJS
         })();
 
         // Countdown Timer
@@ -1345,7 +1672,398 @@
                     photo.classList.remove('spotlight');
                 }, 2000);
             }, 6000); // Após toda a sequência de entrada
+
+            // Inicializar sistema de atração de presentes após todas as animações
+            setTimeout(() => {
+                giftAttractor = new GiftAttractor();
+            }, 7000);
         });
+
+        // Sistema de animações interativas para presentes
+        class GiftAttractor {
+            constructor() {
+                this.giftButton = document.getElementById('giftsLink');
+                this.giftSection = document.getElementById('giftsSection');
+                this.mouseTrails = [];
+                this.pointers = [];
+                this.isNearGift = false;
+                this.celebrationCount = 0;
+
+                this.init();
+            }
+
+            init() {
+                this.setupMouseTracking();
+                this.setupGiftInteractions();
+                this.startAttractorEffects();
+            }
+
+            setupMouseTracking() {
+                let lastX = 0,
+                    lastY = 0;
+
+                document.addEventListener('mousemove', (e) => {
+                    // Criar trilha de partículas
+                    if (Math.random() > 0.7) {
+                        this.createMouseTrail(e.clientX, e.clientY);
+                    }
+
+                    // Verificar proximidade com o botão de presentes
+                    this.checkGiftProximity(e.clientX, e.clientY);
+
+                    lastX = e.clientX;
+                    lastY = e.clientY;
+                });
+            }
+
+            createMouseTrail(x, y) {
+                const trail = document.createElement('div');
+                trail.className = 'mouse-trail';
+                trail.style.left = x + 'px';
+                trail.style.top = y + 'px';
+
+                // Variação de cores roxas originais
+                const colors = ['#8a2be2', '#dda0dd', '#9370db'];
+                trail.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+                document.body.appendChild(trail);
+
+                setTimeout(() => {
+                    if (trail.parentNode) {
+                        trail.remove();
+                    }
+                }, 1000);
+            }
+
+            checkGiftProximity(mouseX, mouseY) {
+                if (!this.giftButton) return;
+
+                const rect = this.giftButton.getBoundingClientRect();
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+                const distance = Math.sqrt(Math.pow(mouseX - centerX, 2) + Math.pow(mouseY - centerY, 2));
+
+                const isNear = distance < 150;
+
+                if (isNear !== this.isNearGift) {
+                    this.isNearGift = isNear;
+                    this.toggleAttractorMode(isNear);
+                }
+
+                if (isNear) {
+                    this.createDirectionalPointer(mouseX, mouseY, centerX, centerY);
+                }
+            }
+
+            toggleAttractorMode(active) {
+                const arrows = this.giftSection.querySelectorAll('.arrow-indicator');
+                const magneticField = this.giftSection.querySelector('.magnetic-field');
+
+                arrows.forEach(arrow => {
+                    arrow.style.opacity = active ? '1' : '0';
+                });
+
+                if (magneticField) {
+                    magneticField.style.opacity = active ? '1' : '0';
+                }
+
+                // Alterar mensagem motivacional
+                const motivation = document.getElementById('giftMotivation');
+                if (motivation) {
+                    if (active) {
+                        motivation.innerHTML = '🎯 Você está quase lá! Clique agora! 🎯';
+                        motivation.style.animation = 'pulse 1s infinite';
+                    } else {
+                        motivation.innerHTML = '✨ Clique e nos ajude a mobiliar nossa nova casa! ✨';
+                        motivation.style.animation = 'none';
+                    }
+                }
+            }
+
+            createDirectionalPointer(mouseX, mouseY, targetX, targetY) {
+                if (Math.random() > 0.8) {
+                    const pointer = document.createElement('div');
+                    pointer.className = 'gift-pointer';
+                    pointer.innerHTML = '🎁';
+
+                    // Posicionar entre o mouse e o botão
+                    const midX = (mouseX + targetX) / 2;
+                    const midY = (mouseY + targetY) / 2;
+
+                    pointer.style.left = midX + 'px';
+                    pointer.style.top = midY + 'px';
+                    pointer.style.opacity = '1';
+
+                    document.body.appendChild(pointer);
+
+                    setTimeout(() => {
+                        if (pointer.parentNode) {
+                            pointer.remove();
+                        }
+                    }, 1500);
+                }
+            }
+
+            setupGiftInteractions() {
+                if (!this.giftButton) return;
+
+                // Hover effects
+                this.giftButton.addEventListener('mouseenter', () => {
+                    this.createStarBurst();
+                    this.giftButton.style.cursor = 'pointer';
+                });
+
+                // Click celebration
+                this.giftButton.addEventListener('click', (e) => {
+                    this.celebrateClick(e);
+                });
+            }
+
+            createStarBurst() {
+                const stars = ['⭐', '✨', '🌟', '💫'];
+                const rect = this.giftButton.getBoundingClientRect();
+
+                for (let i = 0; i < 6; i++) {
+                    setTimeout(() => {
+                        const star = document.createElement('div');
+                        star.className = 'star-particle';
+                        star.innerHTML = stars[Math.floor(Math.random() * stars.length)];
+
+                        const angle = (i * 60) * Math.PI / 180;
+                        const radius = 50;
+                        const x = rect.left + rect.width / 2 + Math.cos(angle) * radius;
+                        const y = rect.top + rect.height / 2 + Math.sin(angle) * radius;
+
+                        star.style.left = x + 'px';
+                        star.style.top = y + 'px';
+
+                        document.body.appendChild(star);
+
+                        setTimeout(() => {
+                            if (star.parentNode) {
+                                star.remove();
+                            }
+                        }, 2000);
+                    }, i * 100);
+                }
+            }
+
+            celebrateClick(event) {
+                event.preventDefault();
+
+                this.celebrationCount++;
+
+                // Animação de celebração no botão
+                this.giftButton.classList.add('celebration-mode');
+
+                // Criar explosão de confetti específica
+                this.createGiftConfetti();
+
+                // Sparkles especiais
+                this.createCelebrationSparkles();
+
+                // Mensagem de sucesso
+                this.showSuccessMessage();
+
+                // Abrir link após animação
+                setTimeout(() => {
+                    window.open(this.giftButton.href, '_blank');
+                    this.giftButton.classList.remove('celebration-mode');
+                }, 800);
+            }
+
+            createGiftConfetti() {
+                const colors = ['#8a2be2', '#dda0dd', '#9370db', '#e6e6fa', '#ffd700'];
+                const emojis = ['🎁', '🏠', '💜', '✨', '🎉'];
+
+                for (let i = 0; i < 30; i++) {
+                    setTimeout(() => {
+                        const confetti = document.createElement('div');
+                        confetti.style.position = 'fixed';
+                        confetti.style.left = Math.random() * 100 + 'vw';
+                        confetti.style.top = '-10px';
+                        confetti.style.zIndex = '10000';
+                        confetti.style.pointerEvents = 'none';
+                        confetti.style.fontSize = '1.5rem';
+
+                        if (Math.random() > 0.5) {
+                            confetti.innerHTML = emojis[Math.floor(Math.random() * emojis.length)];
+                        } else {
+                            confetti.style.width = '10px';
+                            confetti.style.height = '10px';
+                            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                            confetti.style.borderRadius = '50%';
+                        }
+
+                        confetti.style.animation = `confetti ${Math.random() * 2 + 2}s linear forwards`;
+
+                        document.body.appendChild(confetti);
+
+                        setTimeout(() => {
+                            if (confetti.parentNode) {
+                                confetti.remove();
+                            }
+                        }, 4000);
+                    }, i * 50);
+                }
+            }
+
+            createCelebrationSparkles() {
+                const sparkleContainer = this.giftSection;
+
+                for (let i = 0; i < 15; i++) {
+                    setTimeout(() => {
+                        const sparkle = document.createElement('div');
+                        sparkle.className = 'sparkle';
+                        sparkle.style.left = Math.random() * sparkleContainer.offsetWidth + 'px';
+                        sparkle.style.top = Math.random() * sparkleContainer.offsetHeight + 'px';
+
+                        sparkleContainer.style.position = 'relative';
+                        sparkleContainer.appendChild(sparkle);
+
+                        setTimeout(() => {
+                            if (sparkle.parentNode) {
+                                sparkle.remove();
+                            }
+                        }, 1500);
+                    }, i * 100);
+                }
+            }
+
+            showSuccessMessage() {
+                const motivation = document.getElementById('giftMotivation');
+                if (motivation) {
+                    const originalText = motivation.innerHTML;
+                    motivation.innerHTML = '🎉 Obrigado! Redirecionando para os presentes... 🎁';
+                    motivation.style.color = '#4caf50';
+                    motivation.style.fontWeight = 'bold';
+
+                    setTimeout(() => {
+                        motivation.innerHTML = originalText;
+                        motivation.style.color = 'var(--primary-color)';
+                        motivation.style.fontWeight = '600';
+                    }, 3000);
+                }
+            }
+
+            startAttractorEffects() {
+                // Efeitos periódicos para chamar atenção
+                setInterval(() => {
+                    if (!this.isNearGift && Math.random() > 0.7) {
+                        this.createRandomGiftPointer();
+                    }
+                }, 3000);
+
+                // Ativar indicadores de atenção periodicamente
+                setInterval(() => {
+                    this.activateAttentionMode();
+                }, 8000);
+            }
+
+            activateAttentionMode() {
+                if (this.isNearGift) return; // Não ativar se o mouse já estiver próximo
+
+                const giftButton = this.giftButton;
+                const motivation = document.getElementById('giftMotivation');
+
+                // Adicionar classes de atenção
+                giftButton.classList.add('attention-blink', 'call-to-action');
+                if (motivation) {
+                    motivation.classList.add('attention-blink');
+                    motivation.innerHTML = '🎯 Não esqueça dos presentes! Clique no botão! 🎁';
+                }
+
+                // Criar efeito de pulsação extra
+                this.createAttentionPulse();
+
+                // Remover após alguns segundos
+                setTimeout(() => {
+                    giftButton.classList.remove('attention-blink', 'call-to-action');
+                    if (motivation) {
+                        motivation.classList.remove('attention-blink');
+                        motivation.innerHTML = '✨ Clique e nos ajude a mobiliar nossa nova casa! ✨';
+                    }
+                }, 4000);
+            }
+
+            createAttentionPulse() {
+                const pulse = document.createElement('div');
+                pulse.style.position = 'absolute';
+                pulse.style.top = '50%';
+                pulse.style.left = '50%';
+                pulse.style.width = '100%';
+                pulse.style.height = '100%';
+                pulse.style.background = 'radial-gradient(circle, rgba(138, 43, 226, 0.3) 0%, transparent 70%)';
+                pulse.style.borderRadius = '50%';
+                pulse.style.transform = 'translate(-50%, -50%) scale(0)';
+                pulse.style.pointerEvents = 'none';
+                pulse.style.animation = 'attentionPulse 2s ease-out forwards';
+
+                this.giftSection.style.position = 'relative';
+                this.giftSection.appendChild(pulse);
+
+                // Adicionar CSS da animação dinamicamente se não existir
+                if (!document.getElementById('attentionPulseCSS')) {
+                    const style = document.createElement('style');
+                    style.id = 'attentionPulseCSS';
+                    style.textContent = `
+                        @keyframes attentionPulse {
+                            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+                            100% { transform: translate(-50%, -50%) scale(3); opacity: 0; }
+                        }
+                    `;
+                    document.head.appendChild(style);
+                }
+
+                setTimeout(() => {
+                    if (pulse.parentNode) {
+                        pulse.remove();
+                    }
+                }, 2000);
+            }
+
+            createRandomGiftPointer() {
+                const pointer = document.createElement('div');
+                pointer.innerHTML = '🎁';
+                pointer.style.position = 'fixed';
+                pointer.style.fontSize = '2rem';
+                pointer.style.zIndex = '9999';
+                pointer.style.pointerEvents = 'none';
+                pointer.style.animation = 'pointToGift 2s ease-in-out';
+
+                // Posição aleatória nas bordas da tela
+                const side = Math.floor(Math.random() * 4);
+                switch (side) {
+                    case 0: // top
+                        pointer.style.left = Math.random() * 100 + 'vw';
+                        pointer.style.top = '10px';
+                        break;
+                    case 1: // right
+                        pointer.style.right = '10px';
+                        pointer.style.top = Math.random() * 100 + 'vh';
+                        break;
+                    case 2: // bottom
+                        pointer.style.left = Math.random() * 100 + 'vw';
+                        pointer.style.bottom = '10px';
+                        break;
+                    case 3: // left
+                        pointer.style.left = '10px';
+                        pointer.style.top = Math.random() * 100 + 'vh';
+                        break;
+                }
+
+                document.body.appendChild(pointer);
+
+                setTimeout(() => {
+                    if (pointer.parentNode) {
+                        pointer.remove();
+                    }
+                }, 2000);
+            }
+        }
+
+        // Inicializar sistema de atração de presentes
+        let giftAttractor;
     </script>
 </body>
 
