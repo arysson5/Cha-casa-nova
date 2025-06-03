@@ -861,7 +861,7 @@
                         <div class="detail-item">
                             <i class="fas fa-clock detail-icon"></i>
                             <strong>Horário:</strong><br>
-                            <span id="eventTime">13:00 às 18:00</span>
+                            <span id="eventTime">13:00 Horas</span>
                         </div>
                     </div>
                 </div>
@@ -959,6 +959,9 @@
                                 <option value="">Quantas pessoas?</option>
                                 <option value="1">Apenas eu</option>
                                 <option value="2">Eu + 1 acompanhante</option>
+                                <option value="3">Eu + 2 acompanhante</option>
+                                <option value="4">Eu + 3 acompanhante</option>
+                                <option value="5">Eu + 4 acompanhante</option>
                             </select>
                         </div>
                     </div>
@@ -1184,39 +1187,73 @@
                 event_location: document.getElementById('eventLocation').textContent
             };
 
-            // Enviar email usando EmailJS
-            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', formData)
-                .then(function(response) {
-                    console.log('Email enviado com sucesso!', response.status, response.text);
+            // Dados para o email do organizador
+            const organizerData = {
+                to_name: "Arysson & Nicole", // Nome dos organizadores
+                to_email: "Aryssonmenezes@gmail.com", // SEU EMAIL AQUI
+                guest_name: formData.guest_name,
+                guest_email: formData.guest_email,
+                guest_phone: formData.guest_phone,
+                guest_count: formData.guest_count,
+                guest_message: formData.guest_message,
+                event_date: formData.event_date,
+                event_time: formData.event_time,
+                event_location: formData.event_location,
+                confirmation_time: new Date().toLocaleString('pt-BR')
+            };
 
-                    // Esconder loading
-                    loadingMessage.style.display = 'none';
+            // Dados para o email de agradecimento do usuário
+            const guestData = {
+                to_name: formData.guest_name,
+                to_email: formData.guest_email,
+                guest_count: formData.guest_count,
+                event_date: formData.event_date,
+                event_time: formData.event_time,
+                event_location: formData.event_location,
+                organizer_names: "Arysson & Nicole"
+            };
 
-                    // Mostrar modal de presentes em vez da mensagem antiga
-                    setTimeout(() => {
-                        showGiftModal();
-                    }, 1000);
+            // Função para enviar emails em sequência
+            async function sendEmails() {
+                try {
+                    // 1. Enviar email de notificação para o organizador
+                    console.log('Enviando notificação para organizador...');
+                    await emailjs.send('service_b7abfpp', 'template_6gefabi', organizerData);
+                    console.log('✅ Email para organizador enviado!');
 
-                    // Resetar formulário
-                    document.getElementById('rsvpForm').reset();
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('celebrating');
+                    // 2. Enviar email de agradecimento para o usuário
+                    console.log('Enviando agradecimento para convidado...');
+                    await emailjs.send('service_b7abfpp', 'template_60shzvo', guestData);
+                    console.log('✅ Email de agradecimento enviado!');
 
-                }, function(error) {
-                    console.log('Erro ao enviar email:', error);
+                    // Sucesso - ambos os emails enviados
+                    handleSuccess();
 
-                    // Em caso de erro, ainda mostrar modal para o usuário
-                    loadingMessage.style.display = 'none';
+                } catch (error) {
+                    console.error('❌ Erro ao enviar emails:', error);
 
-                    setTimeout(() => {
-                        showGiftModal();
-                    }, 1000);
+                    // Mesmo com erro, mostrar sucesso para o usuário
+                    handleSuccess();
+                }
+            }
 
-                    // Resetar formulário
-                    document.getElementById('rsvpForm').reset();
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('celebrating');
-                });
+            function handleSuccess() {
+                // Esconder loading
+                loadingMessage.style.display = 'none';
+
+                // Mostrar modal de presentes
+                setTimeout(() => {
+                    showGiftModal();
+                }, 1000);
+
+                // Resetar formulário
+                document.getElementById('rsvpForm').reset();
+                submitBtn.disabled = false;
+                submitBtn.classList.remove('celebrating');
+            }
+
+            // Executar envio dos emails
+            sendEmails();
         });
 
         // Make event details editable on double-click (for customization)
