@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste EmailJS - Chá de Casa Nova</title>
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            color: #8a2be2;
+            text-align: center;
+        }
+        
+        .status {
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+        
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+        
+        button {
+            background: #8a2be2;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 5px;
+        }
+        
+        button:hover {
+            background: #9370db;
+        }
+        
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .config {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #8a2be2;
+        }
+        
+        .config h3 {
+            margin-top: 0;
+            color: #8a2be2;
+        }
+        
+        .config-item {
+            margin: 8px 0;
+            font-family: monospace;
+            background: white;
+            padding: 5px 8px;
+            border-radius: 3px;
+        }
+        
+        .logs {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 14px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>🧪 Teste EmailJS - Chá de Casa Nova</h1>
+
+        <div class="config">
+            <h3>📋 Configurações Detectadas:</h3>
+            <div class="config-item"><strong>Public Key:</strong> _LSiXJKxCx1Xy1pRK</div>
+            <div class="config-item"><strong>Service ID:</strong> service_b7abfpp</div>
+            <div class="config-item"><strong>Template Organizador:</strong> template_6gefabi</div>
+            <div class="config-item"><strong>Template Convidado:</strong> template_60shzvo</div>
+            <div class="config-item"><strong>Email Organizador:</strong> Aryssonmenezes@gmail.com</div>
+        </div>
+
+        <div id="status"></div>
+
+        <button onclick="testConnection()">🔗 Testar Conexão</button>
+        <button onclick="testOrganizerEmail()">📧 Testar Email Organizador</button>
+        <button onclick="testGuestEmail()">🙏 Testar Email Convidado</button>
+        <button onclick="testBothEmails()">🚀 Testar Ambos</button>
+        <button onclick="clearLogs()">🗑️ Limpar Logs</button>
+
+        <div class="logs" id="logs">
+            <div>📝 <strong>Console de Testes:</strong></div>
+            <div>Clique nos botões acima para testar as conexões...</div>
+        </div>
+    </div>
+
+    <script>
+        // Configurações (mesmas do site principal)
+        const CONFIG = {
+            publicKey: "_LSiXJKxCx1Xy1pRK",
+            serviceId: "service_b7abfpp",
+            templateOrganizer: "template_6gefabi",
+            templateGuest: "template_60shzvo",
+            organizerEmail: "Aryssonmenezes@gmail.com"
+        };
+
+        // Inicializar EmailJS
+        emailjs.init(CONFIG.publicKey);
+
+        function log(message, type = 'info') {
+            const logs = document.getElementById('logs');
+            const timestamp = new Date().toLocaleTimeString();
+            const logClass = type === 'error' ? 'color: red' : type === 'success' ? 'color: green' : 'color: blue';
+            logs.innerHTML += `<div style="${logClass}">[${timestamp}] ${message}</div>`;
+            logs.scrollTop = logs.scrollHeight;
+        }
+
+        function showStatus(message, type) {
+            const status = document.getElementById('status');
+            status.innerHTML = `<div class="${type}">${message}</div>`;
+        }
+
+        function clearLogs() {
+            document.getElementById('logs').innerHTML = '<div>📝 <strong>Console de Testes:</strong></div><div>Logs limpos...</div>';
+        }
+
+        async function testConnection() {
+            log('🔗 Testando conexão com EmailJS...', 'info');
+            showStatus('🔄 Testando conexão...', 'info');
+
+            try {
+                // Teste simples de conectividade
+                if (typeof emailjs === 'undefined') {
+                    throw new Error('EmailJS não carregado');
+                }
+
+                log('✅ EmailJS carregado com sucesso', 'success');
+                log(`📋 Public Key: ${CONFIG.publicKey}`, 'info');
+                log(`📋 Service ID: ${CONFIG.serviceId}`, 'info');
+
+                showStatus('✅ Conexão estabelecida! EmailJS carregado corretamente.', 'success');
+
+            } catch (error) {
+                log(`❌ Erro na conexão: ${error.message}`, 'error');
+                showStatus('❌ Erro na conexão. Verifique as configurações.', 'error');
+            }
+        }
+
+        async function testOrganizerEmail() {
+            log('📧 Testando envio para organizador...', 'info');
+            showStatus('🔄 Enviando email de teste para organizador...', 'info');
+
+            const testData = {
+                to_name: "Arysson & Nicole",
+                to_email: CONFIG.organizerEmail,
+                guest_name: "Teste da Silva",
+                guest_email: "teste@exemplo.com",
+                guest_phone: "(11) 99999-9999",
+                guest_count: "2",
+                guest_message: "Esta é uma mensagem de teste do sistema!",
+                event_date: "Domingo, 13 de Julho de 2025",
+                event_time: "13:00 Horas",
+                event_location: "Rua Fernando Sanabria, 87 - Jardim Umuarama",
+                confirmation_time: new Date().toLocaleString('pt-BR')
+            };
+
+            try {
+                log(`📤 Enviando para: ${CONFIG.organizerEmail}`, 'info');
+                log(`📋 Template: ${CONFIG.templateOrganizer}`, 'info');
+
+                const response = await emailjs.send(CONFIG.serviceId, CONFIG.templateOrganizer, testData);
+
+                log(`✅ Email organizador enviado! Status: ${response.status}`, 'success');
+                log(`📬 Response: ${response.text}`, 'success');
+                showStatus('✅ Email de teste enviado para o organizador com sucesso!', 'success');
+
+            } catch (error) {
+                log(`❌ Erro ao enviar email organizador: ${error.message}`, 'error');
+                log(`🔍 Detalhes: ${JSON.stringify(error)}`, 'error');
+                showStatus('❌ Erro ao enviar email para organizador. Verifique template e configurações.', 'error');
+            }
+        }
+
+        async function testGuestEmail() {
+            log('🙏 Testando envio para convidado...', 'info');
+            showStatus('🔄 Enviando email de teste para convidado...', 'info');
+
+            const testData = {
+                to_name: "Teste da Silva",
+                to_email: "teste@exemplo.com", // Email de teste
+                guest_count: "2",
+                event_date: "Domingo, 13 de Julho de 2025",
+                event_time: "13:00 Horas",
+                event_location: "Rua Fernando Sanabria, 87 - Jardim Umuarama",
+                organizer_names: "Arysson & Nicole"
+            };
+
+            try {
+                log(`📤 Enviando para: teste@exemplo.com`, 'info');
+                log(`📋 Template: ${CONFIG.templateGuest}`, 'info');
+
+                const response = await emailjs.send(CONFIG.serviceId, CONFIG.templateGuest, testData);
+
+                log(`✅ Email convidado enviado! Status: ${response.status}`, 'success');
+                log(`📬 Response: ${response.text}`, 'success');
+                showStatus('✅ Email de teste enviado para o convidado com sucesso!', 'success');
+
+            } catch (error) {
+                log(`❌ Erro ao enviar email convidado: ${error.message}`, 'error');
+                log(`🔍 Detalhes: ${JSON.stringify(error)}`, 'error');
+                showStatus('❌ Erro ao enviar email para convidado. Verifique template e configurações.', 'error');
+            }
+        }
+
+        async function testBothEmails() {
+            log('🚀 Testando envio de ambos os emails...', 'info');
+            showStatus('🔄 Enviando ambos os emails de teste...', 'info');
+
+            try {
+                await testOrganizerEmail();
+                await new Promise(resolve => setTimeout(resolve, 2000)); // Aguardar 2 segundos
+                await testGuestEmail();
+
+                log('🎉 Teste completo finalizado!', 'success');
+                showStatus('🎉 Ambos os emails enviados com sucesso! Sistema funcionando perfeitamente.', 'success');
+
+            } catch (error) {
+                log(`❌ Erro no teste completo: ${error.message}`, 'error');
+                showStatus('❌ Erro durante o teste completo.', 'error');
+            }
+        }
+
+        // Teste inicial de conectividade
+        window.addEventListener('load', function() {
+            setTimeout(testConnection, 1000);
+        });
+    </script>
+</body>
+
+</html>
