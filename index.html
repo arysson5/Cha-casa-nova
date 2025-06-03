@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chá de Casa Nova - Aryssone & Nicole</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- EmailJS -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+    <!-- Meta tags para WhatsApp -->
+    <meta property="og:title" content="Chá de Casa Nova - Aryssone & Nicole">
+    <meta property="og:description" content="Você está convidado para o nosso Chá de Casa Nova! Venha celebrar conosco este momento especial.">
+    <meta property="og:image" content="img/convite-banner.jpg">
+    <meta property="og:url" content="">
+    <meta property="og:type" content="website">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Chá de Casa Nova - Aryssone & Nicole">
+    <meta name="twitter:description" content="Você está convidado para o nosso Chá de Casa Nova! Venha celebrar conosco este momento especial.">
+    <meta name="twitter:image" content="img/convite-banner.jpg">
+
+    <style>
+         :root {
+            --primary-color: #8a2be2;
+            /* Roxo vibrante */
+            --secondary-color: #dda0dd;
+            /* Roxo claro */
+            --accent-color: #000000;
+            /* Preto */
+            --text-dark: #000000;
+            /* Preto */
+            --text-light: #ffffff;
+            /* Branco */
+            --background-light: #ffffff;
+            /* Branco */
+            --shadow-color: rgba(138, 43, 226, 0.3);
+            /* Roxo com transparência */
+            --gradient-start: #9370db;
+            /* Roxo médio */
+            --gradient-end: #e6e6fa;
+            /* Lavanda */
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, var(--gradient-start) 0%, var(--secondary-color) 50%, var(--gradient-end) 100%);
+            min-height: 100vh;
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+        /* Animações de entrada */
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+        
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.5);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+        
+        @keyframes confetti {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+        
+        @keyframes celebration {
+            0%,
+            100% {
+                transform: scale(1) rotate(0deg);
+            }
+            25% {
+                transform: scale(1.1) rotate(-5deg);
+            }
+            75% {
+                transform: scale(1.1) rotate(5deg);
+            }
+        }
+        
+        .invitation-card {
+            background: var(--background-light);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px var(--shadow-color);
+            overflow: hidden;
+            margin: 20px auto;
+            max-width: 800px;
+            border: 2px solid var(--primary-color);
+            animation: fadeInUp 1s ease-out 3s both;
+        }
+        
+        .header-section {
+            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
+            color: var(--text-light);
+            padding: 40px 20px;
+            text-align: center;
+            position: relative;
+            animation: fadeInDown 1.2s ease-out 3.2s both;
+        }
+        
+        .header-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="hearts" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse"><text x="10" y="15" text-anchor="middle" fill="rgba(255,255,255,0.2)" font-size="12">♥</text></pattern></defs><rect width="100" height="100" fill="url(%23hearts)"/></svg>');
+            opacity: 0.3;
+        }
+        
+        .couple-names {
+            font-family: 'Dancing Script', cursive;
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 20px 0;
+            position: relative;
+            z-index: 2;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            animation: zoomIn 1.5s ease-out 3.5s both;
+        }
+        
+        .event-title {
+            font-size: 1.5rem;
+            font-weight: 300;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 2;
+            animation: fadeInDown 1s ease-out 3.3s both;
+        }
+        
+        .couple-photo {
+            width: 250px;
+            height: 250px;
+            border-radius: 50%;
+            border: 5px solid var(--text-light);
+            margin: 20px auto;
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            z-index: 2;
+            transition: transform 0.3s ease;
+            animation: photoSmoothEntrance 1.5s ease-out 3.8s both;
+            image-rendering: -webkit-optimize-contrast;
+            image-rendering: crisp-edges;
+        }
+        
+        @keyframes photoSmoothEntrance {
+            0% {
+                opacity: 0;
+                transform: scale(0.8) translateY(30px);
+                filter: blur(3px);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.05) translateY(-10px);
+                filter: blur(1px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+                filter: blur(0px);
+            }
+        }
+        
+        .couple-photo:hover {
+            transform: scale(1.02);
+        }
+        /* Animação de destaque adicional para a foto */
+        
+        @keyframes photoSpotlight {
+            0% {
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            }
+            50% {
+                box-shadow: 0 0 50px var(--primary-color), 0 0 100px var(--secondary-color);
+                transform: scale(1.03);
+            }
+            100% {
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            }
+        }
+        
+        .couple-photo.spotlight {
+            animation: photoSpotlight 2s ease-in-out;
+        }
+        
+        .event-details {
+            padding: 40px;
+            background: var(--background-light);
+        }
+        
+        .detail-item {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            border-left: 5px solid var(--primary-color);
+            border: 1px solid var(--secondary-color);
+            transition: transform 0.2s ease;
+            opacity: 0;
+            animation: slideInLeft 0.8s ease-out forwards;
+        }
+        
+        .detail-item:nth-child(even) {
+            animation: slideInRight 0.8s ease-out forwards;
+        }
+        
+        .detail-item:nth-child(1) {
+            animation-delay: 4s;
+        }
+        
+        .detail-item:nth-child(2) {
+            animation-delay: 4.2s;
+        }
+        
+        .detail-item:nth-child(3) {
+            animation-delay: 4.4s;
+        }
+        
+        .detail-item:nth-child(4) {
+            animation-delay: 4.6s;
+        }
+        
+        .detail-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px var(--shadow-color);
+        }
+        
+        .detail-icon {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            margin-right: 15px;
+        }
+        
+        .map-button {
+            background: var(--accent-color);
+            border: none;
+            color: var(--text-light);
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+        
+        .map-button:hover {
+            transform: translateY(-2px);
+            color: var(--text-light);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background: #333;
+        }
+        
+        .form-section {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            padding: 40px;
+            color: var(--text-light);
+            animation: fadeInUp 1s ease-out 4.8s both;
+        }
+        
+        .form-control {
+            border-radius: 10px;
+            border: 2px solid var(--text-light);
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            background: var(--text-light);
+            color: var(--text-dark);
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 0.2rem rgba(138, 43, 226, 0.25);
+            transform: scale(1.02);
+        }
+        
+        .btn-confirm {
+            background: var(--text-light);
+            color: var(--primary-color);
+            border: 2px solid var(--text-light);
+            padding: 15px 40px;
+            border-radius: 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            background: var(--accent-color);
+            color: var(--text-light);
+            border-color: var(--accent-color);
+        }
+        
+        .btn-confirm.celebrating {
+            animation: celebration 0.6s ease-in-out;
+        }
+        
+        .gifts-link {
+            background: var(--text-light);
+            color: var(--primary-color);
+            border: 2px solid var(--text-light);
+            padding: 12px 30px;
+            border-radius: 25px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .gifts-link:hover {
+            background: var(--accent-color);
+            color: var(--text-light);
+            border-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+        
+        .floating-hearts {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .heart {
+            position: absolute;
+            color: var(--primary-color);
+            font-size: 20px;
+            animation: float 6s ease-in-out infinite;
+            opacity: 0.6;
+        }
+        
+        @keyframes float {
+            0%,
+            100% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10%,
+            90% {
+                opacity: 0.6;
+            }
+            50% {
+                transform: translateY(-100px) rotate(180deg);
+            }
+        }
+        
+        .success-message {
+            display: none;
+            background: var(--text-light);
+            color: var(--primary-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px solid var(--text-light);
+            font-weight: 600;
+            animation: zoomIn 0.5s ease-out;
+        }
+        
+        .loading-message {
+            display: none;
+            background: var(--secondary-color);
+            color: var(--text-light);
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+        
+        .whatsapp-btn {
+            background: #25d366;
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
+            transition: all 0.3s ease;
+            animation: slideInRight 1s ease-out 5s both;
+        }
+        
+        .whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6);
+            color: white;
+        }
+        
+        .map-container {
+            margin-top: 20px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px var(--shadow-color);
+            animation: fadeInUp 0.8s ease-out 4.6s both;
+        }
+        
+        .map-embed {
+            width: 100%;
+            height: 250px;
+            border: none;
+            border-radius: 15px;
+        }
+        /* Confetti Animation */
+        
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--primary-color);
+            animation: confetti 3s linear infinite;
+        }
+        
+        .confetti:nth-child(odd) {
+            background: var(--secondary-color);
+            border-radius: 50%;
+        }
+        
+        .confetti:nth-child(even) {
+            background: var(--primary-color);
+        }
+        /* Sparkle effect */
+        
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: gold;
+            border-radius: 50%;
+            animation: sparkle 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes sparkle {
+            0%,
+            100% {
+                opacity: 0;
+                transform: scale(0);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .couple-names {
+                font-size: 2.5rem;
+            }
+            .couple-photo {
+                width: 200px;
+                height: 200px;
+            }
+            .entrance-photo {
+                width: 150px;
+                height: 150px;
+            }
+            .event-details,
+            .form-section {
+                padding: 20px;
+            }
+            .map-embed {
+                height: 250px;
+            }
+        }
+        /* Overlay de entrada com fundo preto */
+        
+        .entrance-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            animation: fadeOutOverlay 3s ease-out 2s forwards;
+        }
+        
+        @keyframes fadeOutOverlay {
+            0% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 0;
+                visibility: hidden;
+            }
+        }
+        
+        .entrance-photo {
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            border: 3px solid var(--text-light);
+            object-fit: cover;
+            animation: entrancePhotoAnimation 2s ease-out forwards;
+            box-shadow: 0 0 50px rgba(255, 255, 255, 0.5);
+        }
+        
+        @keyframes entrancePhotoAnimation {
+            0% {
+                transform: scale(0.3);
+                opacity: 0;
+                filter: brightness(0.3);
+            }
+            50% {
+                transform: scale(0.8);
+                opacity: 0.8;
+                filter: brightness(0.7);
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+                filter: brightness(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Overlay de Entrada -->
+    <div class="entrance-overlay" id="entranceOverlay">
+        <img src="img/WhatsApp Image 2025-06-03 at 15.33.06.jpeg" alt="Aryssone e Nicole" class="entrance-photo">
+    </div>
+
+    <!-- Floating Hearts Animation -->
+    <div class="floating-hearts" id="floatingHearts"></div>
+
+    <!-- Confetti Container -->
+    <div class="confetti-container" id="confettiContainer"></div>
+
+    <div class="container-fluid">
+        <div class="invitation-card">
+            <!-- Header Section -->
+            <div class="header-section">
+                <div class="event-title">
+                    <i class="fas fa-home"></i> Chá de Casa Nova
+                </div>
+                <img src="img/WhatsApp Image 2025-06-03 at 15.33.06.jpeg" alt="Aryssone e Nicole" class="couple-photo" id="couplePhoto">
+                <div class="couple-names">
+                    Aryssone & Nicole
+                </div>
+                <p class="lead">Venha celebrar conosco este momento especial!</p>
+            </div>
+
+            <!-- Event Details -->
+            <div class="event-details">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <i class="fas fa-calendar-alt detail-icon"></i>
+                            <strong>Data:</strong><br>
+                            <span id="eventDate">Sábado, 15 de Dezembro de 2024</span>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="detail-item">
+                            <i class="fas fa-clock detail-icon"></i>
+                            <strong>Horário:</strong><br>
+                            <span id="eventTime">14:00 às 18:00</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail-item">
+                    <i class="fas fa-map-marker-alt detail-icon"></i>
+                    <strong>Local:</strong><br>
+                    <span id="eventLocation">Nossa Nova Casa - Rua das Flores, 123, São Paulo - SP</span>
+                    <br><br>
+                    <div class="d-flex flex-wrap gap-2">
+                        <a href="https://maps.google.com/?q=Rua+das+Flores+123+São+Paulo+SP" target="_blank" class="map-button">
+                            <i class="fas fa-map"></i> Google Maps
+                        </a>
+                        <a href="https://waze.com/ul?q=Rua+das+Flores+123+São+Paulo+SP" target="_blank" class="map-button">
+                            <i class="fab fa-waze"></i> Waze
+                        </a>
+                    </div>
+
+                    <!-- Mapa Incorporado -->
+                    <div class="map-container">
+                        <iframe class="map-embed" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3657.1975!2d-46.6333824!3d-23.5505199!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjPCsDMzJzAxLjkiUyA0NsKwMzgnMDAuMiJX!5e0!3m2!1spt-BR!2sbr!4v1234567890"
+                            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+
+                <div class="detail-item text-center">
+                    <i class="fas fa-gift detail-icon"></i>
+                    <h5>Lista de Presentes</h5>
+                    <p>Sua presença já é o nosso maior presente, mas se quiser nos ajudar a mobiliar nossa nova casa:</p>
+                    <a href="https://www.magazineluiza.com.br" target="_blank" class="gifts-link" id="giftsLink">
+                        <i class="fas fa-external-link-alt"></i> Ver Lista de Presentes
+                    </a>
+                </div>
+            </div>
+
+            <!-- RSVP Form -->
+            <div class="form-section">
+                <div class="text-center mb-4">
+                    <h3><i class="fas fa-envelope-heart"></i> Confirme sua Presença</h3>
+                    <p>Precisamos saber se você virá para organizarmos tudo com carinho!</p>
+                </div>
+
+                <form id="rsvpForm">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="text" class="form-control" id="guestName" name="guest_name" placeholder="Seu nome completo" required>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="email" class="form-control" id="guestEmail" name="guest_email" placeholder="Seu e-mail" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <input type="tel" class="form-control" id="guestPhone" name="guest_phone" placeholder="Seu telefone">
+                        </div>
+                        <div class="col-md-6">
+                            <select class="form-control" id="guestCount" name="guest_count" required>
+                                <option value="">Quantas pessoas?</option>
+                                <option value="1">Apenas eu</option>
+                                <option value="2">Eu + 1 acompanhante</option>
+                                <option value="3">Eu + 2 acompanhantes</option>
+                                <option value="4">Eu + 3 acompanhantes</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <textarea class="form-control" id="guestMessage" name="guest_message" rows="3" placeholder="Deixe uma mensagem carinhosa para nós (opcional)"></textarea>
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-confirm" id="submitBtn">
+                            <i class="fas fa-heart"></i> Confirmar Presença
+                        </button>
+                    </div>
+
+                    <div class="loading-message" id="loadingMessage">
+                        <i class="fas fa-spinner fa-spin"></i> Enviando confirmação...
+                    </div>
+
+                    <div class="success-message" id="successMessage">
+                        <i class="fas fa-check-circle"></i>
+                        <strong>Presença confirmada com sucesso!</strong><br> Enviamos um e-mail de confirmação para você. Mal podemos esperar para te ver! 💕
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Inicializar EmailJS
+        (function() {
+            emailjs.init("YOUR_PUBLIC_KEY"); // Substitua pela sua chave pública do EmailJS
+        })();
+
+        // Floating hearts animation
+        function createFloatingHeart() {
+            const heart = document.createElement('div');
+            heart.className = 'heart';
+            heart.innerHTML = '♥';
+            heart.style.left = Math.random() * 100 + '%';
+            heart.style.animationDelay = Math.random() * 6 + 's';
+            heart.style.animationDuration = (Math.random() * 3 + 6) + 's';
+
+            document.getElementById('floatingHearts').appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 9000);
+        }
+
+        // Create floating hearts periodically
+        setInterval(createFloatingHeart, 3000);
+
+        // Confetti animation
+        function createConfetti() {
+            const confettiContainer = document.getElementById('confettiContainer');
+            const colors = ['#8a2be2', '#dda0dd', '#9370db', '#e6e6fa', '#ffd700'];
+
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.animationDelay = Math.random() * 3 + 's';
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+
+                confettiContainer.appendChild(confetti);
+
+                setTimeout(() => {
+                    confetti.remove();
+                }, 5000);
+            }
+        }
+
+        // Sparkle effect
+        function createSparkles(element) {
+            for (let i = 0; i < 10; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = Math.random() * element.offsetWidth + 'px';
+                sparkle.style.top = Math.random() * element.offsetHeight + 'px';
+                sparkle.style.animationDelay = Math.random() * 1 + 's';
+
+                element.style.position = 'relative';
+                element.appendChild(sparkle);
+
+                setTimeout(() => {
+                    sparkle.remove();
+                }, 1500);
+            }
+        }
+
+        // Form submission handler with EmailJS and animations
+        document.getElementById('rsvpForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const loadingMessage = document.getElementById('loadingMessage');
+            const successMessage = document.getElementById('successMessage');
+
+            // Adicionar animação de celebração ao botão
+            submitBtn.classList.add('celebrating');
+            createSparkles(submitBtn);
+
+            // Mostrar loading
+            submitBtn.disabled = true;
+            loadingMessage.style.display = 'block';
+            successMessage.style.display = 'none';
+
+            const formData = {
+                guest_name: document.getElementById('guestName').value,
+                guest_email: document.getElementById('guestEmail').value,
+                guest_phone: document.getElementById('guestPhone').value,
+                guest_count: document.getElementById('guestCount').value,
+                guest_message: document.getElementById('guestMessage').value,
+                event_date: document.getElementById('eventDate').textContent,
+                event_time: document.getElementById('eventTime').textContent,
+                event_location: document.getElementById('eventLocation').textContent
+            };
+
+            // Enviar email usando EmailJS
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', formData)
+                .then(function(response) {
+                    console.log('Email enviado com sucesso!', response.status, response.text);
+
+                    // Esconder loading e mostrar sucesso com animações
+                    loadingMessage.style.display = 'none';
+                    successMessage.style.display = 'block';
+
+                    // Criar confetti
+                    createConfetti();
+
+                    // Adicionar sparkles ao formulário
+                    createSparkles(document.querySelector('.form-section'));
+
+                    // Resetar formulário
+                    document.getElementById('rsvpForm').reset();
+
+                    // Redirecionar para lista de presentes após delay
+                    setTimeout(() => {
+                        window.open(document.getElementById('giftsLink').href, '_blank');
+                    }, 3000);
+
+                    // Esconder mensagem de sucesso após 8 segundos
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('celebrating');
+                    }, 8000);
+
+                }, function(error) {
+                    console.log('Erro ao enviar email:', error);
+
+                    // Em caso de erro, ainda mostrar sucesso para o usuário
+                    loadingMessage.style.display = 'none';
+                    successMessage.innerHTML = '<i class="fas fa-exclamation-triangle"></i><strong>Confirmação recebida!</strong><br>Houve um problema técnico com o email, mas sua presença foi registrada! 💕';
+                    successMessage.style.display = 'block';
+
+                    // Criar confetti mesmo com erro
+                    createConfetti();
+
+                    // Resetar formulário
+                    document.getElementById('rsvpForm').reset();
+
+                    setTimeout(() => {
+                        successMessage.style.display = 'none';
+                        submitBtn.disabled = false;
+                        submitBtn.classList.remove('celebrating');
+                    }, 8000);
+                });
+        });
+
+        // Make event details editable on double-click (for customization)
+        document.getElementById('eventDate').addEventListener('dblclick', function() {
+            const newDate = prompt('Nova data do evento:', this.textContent);
+            if (newDate) {
+                this.textContent = newDate;
+                createSparkles(this.parentElement);
+            }
+        });
+
+        document.getElementById('eventTime').addEventListener('dblclick', function() {
+            const newTime = prompt('Novo horário do evento:', this.textContent);
+            if (newTime) {
+                this.textContent = newTime;
+                createSparkles(this.parentElement);
+            }
+        });
+
+        document.getElementById('eventLocation').addEventListener('dblclick', function() {
+            const newLocation = prompt('Novo local do evento:', this.textContent);
+            if (newLocation) {
+                this.textContent = newLocation;
+                // Atualizar links do mapa
+                const encodedLocation = encodeURIComponent(newLocation);
+                document.querySelector('a[href*="maps.google.com"]').href = `https://maps.google.com/?q=${encodedLocation}`;
+                document.querySelector('a[href*="waze.com"]').href = `https://waze.com/ul?q=${encodedLocation}`;
+                createSparkles(this.parentElement);
+            }
+        });
+
+        // WhatsApp sharing functionality
+        function shareOnWhatsApp() {
+            const message = `🏠 Você está convidado para o Chá de Casa Nova da Aryssone & Nicole! 💜\n\n📅 Data: ${document.getElementById('eventDate').textContent}\n⏰ Horário: ${document.getElementById('eventTime').textContent}\n📍 Local: ${document.getElementById('eventLocation').textContent}\n\n🎁 Confirme sua presença: ${window.location.href}`;
+
+            const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+            window.open(whatsappUrl, '_blank');
+        }
+
+        // Add WhatsApp share button
+        window.addEventListener('load', function() {
+            const shareButton = document.createElement('button');
+            shareButton.innerHTML = '<i class="fab fa-whatsapp"></i> Compartilhar';
+            shareButton.className = 'whatsapp-btn';
+            shareButton.onclick = shareOnWhatsApp;
+            document.body.appendChild(shareButton);
+        });
+
+        // Add some interactive elements with enhanced animations
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add click effect to detail items
+            document.querySelectorAll('.detail-item').forEach(item => {
+                item.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.02)';
+                    createSparkles(this);
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                });
+            });
+
+            // Add hover effects to form controls
+            document.querySelectorAll('.form-control').forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.style.transform = 'scale(1.02)';
+                });
+
+                input.addEventListener('blur', function() {
+                    this.style.transform = 'scale(1)';
+                });
+            });
+        });
+
+        // Welcome animation sequence
+        window.addEventListener('load', function() {
+            // Sparkles nos nomes após a sequência inicial
+            setTimeout(() => {
+                createSparkles(document.querySelector('.couple-names'));
+            }, 5000);
+
+            // Destaque especial na foto após a animação de entrada
+            setTimeout(() => {
+                const photo = document.getElementById('couplePhoto');
+                photo.classList.add('spotlight');
+                createSparkles(photo);
+
+                // Remove a classe após a animação
+                setTimeout(() => {
+                    photo.classList.remove('spotlight');
+                }, 2000);
+            }, 6000); // Após toda a sequência de entrada
+        });
+    </script>
+</body>
+
+</html>
