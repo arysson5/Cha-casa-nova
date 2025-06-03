@@ -1187,50 +1187,36 @@
                 event_location: document.getElementById('eventLocation').textContent
             };
 
-            // Dados para o email do organizador
-            const organizerData = {
-                to_name: "Arysson & Nicole", // Nome dos organizadores
-                to_email: "Aryssonmenezes@gmail.com", // SEU EMAIL AQUI
+            // Dados para o email único (convidado + cópias para organizadores)
+            const emailData = {
+                to_name: formData.guest_name,
+                to_email: formData.guest_email,
+                cc_email1: "Aryssonmenezes@gmail.com", // Email do organizador 1
+                cc_email2: "nicolesantos904@gmail.com", // Email do organizador 2
                 guest_name: formData.guest_name,
                 guest_email: formData.guest_email,
                 guest_phone: formData.guest_phone,
                 guest_count: formData.guest_count,
-                guest_message: formData.guest_message,
+                guest_message: formData.guest_message || "Nenhuma mensagem especial",
                 event_date: formData.event_date,
                 event_time: formData.event_time,
                 event_location: formData.event_location,
+                organizer_names: "Arysson & Nicole",
                 confirmation_time: new Date().toLocaleString('pt-BR')
             };
 
-            // Dados para o email de agradecimento do usuário
-            const guestData = {
-                to_name: formData.guest_name,
-                to_email: formData.guest_email,
-                guest_count: formData.guest_count,
-                event_date: formData.event_date,
-                event_time: formData.event_time,
-                event_location: formData.event_location,
-                organizer_names: "Arysson & Nicole"
-            };
-
-            // Função para enviar emails em sequência
-            async function sendEmails() {
+            // Função para enviar email único
+            async function sendEmail() {
                 try {
-                    // 1. Enviar email de notificação para o organizador
-                    console.log('Enviando notificação para organizador...');
-                    await emailjs.send('service_b7abfpp', 'template_6gefabi', organizerData);
-                    console.log('✅ Email para organizador enviado!');
+                    console.log('Enviando email de confirmação...');
+                    await emailjs.send('service_b7abfpp', 'template_60shzvo', emailData);
+                    console.log('✅ Email enviado com sucesso!');
 
-                    // 2. Enviar email de agradecimento para o usuário
-                    console.log('Enviando agradecimento para convidado...');
-                    await emailjs.send('service_b7abfpp', 'template_60shzvo', guestData);
-                    console.log('✅ Email de agradecimento enviado!');
-
-                    // Sucesso - ambos os emails enviados
+                    // Sucesso
                     handleSuccess();
 
                 } catch (error) {
-                    console.error('❌ Erro ao enviar emails:', error);
+                    console.error('❌ Erro ao enviar email:', error);
 
                     // Mesmo com erro, mostrar sucesso para o usuário
                     handleSuccess();
@@ -1252,8 +1238,8 @@
                 submitBtn.classList.remove('celebrating');
             }
 
-            // Executar envio dos emails
-            sendEmails();
+            // Executar envio do email
+            sendEmail();
         });
 
         // Make event details editable on double-click (for customization)

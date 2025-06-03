@@ -120,17 +120,15 @@
             <h3>📋 Configurações Detectadas:</h3>
             <div class="config-item"><strong>Public Key:</strong> _LSiXJKxCx1Xy1pRK</div>
             <div class="config-item"><strong>Service ID:</strong> service_b7abfpp</div>
-            <div class="config-item"><strong>Template Organizador:</strong> template_6gefabi</div>
-            <div class="config-item"><strong>Template Convidado:</strong> template_60shzvo</div>
-            <div class="config-item"><strong>Email Organizador:</strong> Aryssonmenezes@gmail.com</div>
+            <div class="config-item"><strong>Template Unificado:</strong>template_60shzvo </div>
+            <div class="config-item"><strong>Email Organizador 1:</strong> Aryssonmenezes@gmail.com</div>
+            <div class="config-item"><strong>Email Organizador 2:</strong> aryjr41@gmail.com</div>
         </div>
 
         <div id="status"></div>
 
         <button onclick="testConnection()">🔗 Testar Conexão</button>
-        <button onclick="testOrganizerEmail()">📧 Testar Email Organizador</button>
-        <button onclick="testGuestEmail()">🙏 Testar Email Convidado</button>
-        <button onclick="testBothEmails()">🚀 Testar Ambos</button>
+        <button onclick="testUnifiedEmail()">📧 Testar Email Unificado</button>
         <button onclick="clearLogs()">🗑️ Limpar Logs</button>
 
         <div class="logs" id="logs">
@@ -144,9 +142,9 @@
         const CONFIG = {
             publicKey: "_LSiXJKxCx1Xy1pRK",
             serviceId: "service_b7abfpp",
-            templateOrganizer: "template_6gefabi",
-            templateGuest: "template_60shzvo",
-            organizerEmail: "Aryssonmenezes@gmail.com"
+            templateUnified: "template_60shzvo",
+            organizerEmail1: "Aryssonmenezes@gmail.com",
+            organizerEmail2: "aryjr41@gmail.com"
         };
 
         // Inicializar EmailJS
@@ -191,87 +189,43 @@
             }
         }
 
-        async function testOrganizerEmail() {
-            log('📧 Testando envio para organizador...', 'info');
-            showStatus('🔄 Enviando email de teste para organizador...', 'info');
+        async function testUnifiedEmail() {
+            log('📧 Testando envio do email unificado...', 'info');
+            showStatus('🔄 Enviando email unificado de teste...', 'info');
 
             const testData = {
-                to_name: "Arysson & Nicole",
-                to_email: CONFIG.organizerEmail,
+                to_name: "Teste da Silva",
+                to_email: "aryjr41@gmail.com",
+                cc_email1: CONFIG.organizerEmail1,
+                cc_email2: CONFIG.organizerEmail2,
                 guest_name: "Teste da Silva",
-                guest_email: "teste@exemplo.com",
+                guest_email: "aryjr41@gmail.com",
                 guest_phone: "(11) 99999-9999",
                 guest_count: "2",
-                guest_message: "Esta é uma mensagem de teste do sistema!",
+                guest_message: "Esta é uma mensagem de teste do convidado para os organizadores!",
                 event_date: "Domingo, 13 de Julho de 2025",
                 event_time: "13:00 Horas",
                 event_location: "Rua Fernando Sanabria, 87 - Jardim Umuarama",
+                organizer_names: "Arysson & Nicole",
                 confirmation_time: new Date().toLocaleString('pt-BR')
             };
 
             try {
-                log(`📤 Enviando para: ${CONFIG.organizerEmail}`, 'info');
-                log(`📋 Template: ${CONFIG.templateOrganizer}`, 'info');
+                log(`📤 Enviando para: ${testData.to_email}`, 'info');
+                log(`📋 Cópia 1: ${CONFIG.organizerEmail1}`, 'info');
+                log(`📋 Cópia 2: ${CONFIG.organizerEmail2}`, 'info');
+                log(`📋 Template: ${CONFIG.templateUnified}`, 'info');
 
-                const response = await emailjs.send(CONFIG.serviceId, CONFIG.templateOrganizer, testData);
+                const response = await emailjs.send(CONFIG.serviceId, CONFIG.templateUnified, testData);
 
-                log(`✅ Email organizador enviado! Status: ${response.status}`, 'success');
+                log(`✅ Email unificado enviado! Status: ${response.status}`, 'success');
                 log(`📬 Response: ${response.text}`, 'success');
-                showStatus('✅ Email de teste enviado para o organizador com sucesso!', 'success');
+                showStatus('✅ Email unificado enviado com sucesso! Verifique as 3 caixas de email.', 'success');
 
             } catch (error) {
-                log(`❌ Erro ao enviar email organizador: ${error.message}`, 'error');
+                log(`❌ Erro ao enviar email unificado: ${error.message}`, 'error');
                 log(`🔍 Detalhes: ${JSON.stringify(error)}`, 'error');
-                showStatus('❌ Erro ao enviar email para organizador. Verifique template e configurações.', 'error');
-            }
-        }
-
-        async function testGuestEmail() {
-            log('🙏 Testando envio para convidado...', 'info');
-            showStatus('🔄 Enviando email de teste para convidado...', 'info');
-
-            const testData = {
-                to_name: "Teste da Silva",
-                to_email: "teste@exemplo.com", // Email de teste
-                guest_count: "2",
-                event_date: "Domingo, 13 de Julho de 2025",
-                event_time: "13:00 Horas",
-                event_location: "Rua Fernando Sanabria, 87 - Jardim Umuarama",
-                organizer_names: "Arysson & Nicole"
-            };
-
-            try {
-                log(`📤 Enviando para: teste@exemplo.com`, 'info');
-                log(`📋 Template: ${CONFIG.templateGuest}`, 'info');
-
-                const response = await emailjs.send(CONFIG.serviceId, CONFIG.templateGuest, testData);
-
-                log(`✅ Email convidado enviado! Status: ${response.status}`, 'success');
-                log(`📬 Response: ${response.text}`, 'success');
-                showStatus('✅ Email de teste enviado para o convidado com sucesso!', 'success');
-
-            } catch (error) {
-                log(`❌ Erro ao enviar email convidado: ${error.message}`, 'error');
-                log(`🔍 Detalhes: ${JSON.stringify(error)}`, 'error');
-                showStatus('❌ Erro ao enviar email para convidado. Verifique template e configurações.', 'error');
-            }
-        }
-
-        async function testBothEmails() {
-            log('🚀 Testando envio de ambos os emails...', 'info');
-            showStatus('🔄 Enviando ambos os emails de teste...', 'info');
-
-            try {
-                await testOrganizerEmail();
-                await new Promise(resolve => setTimeout(resolve, 2000)); // Aguardar 2 segundos
-                await testGuestEmail();
-
-                log('🎉 Teste completo finalizado!', 'success');
-                showStatus('🎉 Ambos os emails enviados com sucesso! Sistema funcionando perfeitamente.', 'success');
-
-            } catch (error) {
-                log(`❌ Erro no teste completo: ${error.message}`, 'error');
-                showStatus('❌ Erro durante o teste completo.', 'error');
+                showStatus('❌ Erro ao enviar email unificado. Verifique template e configurações.', 'error');
             }
         }
 
