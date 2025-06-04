@@ -779,7 +779,21 @@ function displayGifts(filteredGifts = null) {
     console.log('🔍 DisplayGifts - Presente do usuário:', userChosenGift);
     console.log('🔍 DisplayGifts - Usuário já escolheu?', userHasChosen);
 
-    giftsGrid.innerHTML = giftsToShow.map(gift => {
+    // Adicionar alerta informativo sobre links de compra
+    const infoAlert = `
+        <div class="col-12 mb-4">
+            <div class="alert alert-info alert-dismissible fade show" role="alert">
+                <i class="fas fa-info-circle"></i>
+                <strong>💡 Dica Importante:</strong> 
+                Os links de compra são apenas <strong>sugestões</strong>! Você pode comprar o mesmo produto 
+                <strong>com a mesma cor</strong> em qualquer loja de sua preferência. 
+                O importante é que seja o mesmo item para manter a harmonia do conjunto.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        </div>
+    `;
+
+    const giftsCards = giftsToShow.map(gift => {
                 // Verificações claras e separadas
                 const isChosenByAnyone = isGiftChosen(gift.name);
                 const isChosenByCurrentUser = userChosenGift && userChosenGift.giftName === gift.name;
@@ -802,10 +816,10 @@ function displayGifts(filteredGifts = null) {
                     cardClass += ' user-chosen';
                     indicator = '<div class="chosen-indicator user-chosen-indicator">🎁 Sua Escolha</div>';
                     actionButton = `
-                        <button class="btn-choose btn-unselect" onclick="unselectGift('${gift.name}')">
-                            🗑️ Desmarcar
-                        </button>
-                    `;
+                <button class="btn-choose btn-unselect" onclick="unselectGift('${gift.name}')">
+                    🗑️ Desmarcar
+                </button>
+            `;
                 } else if (isChosenByAnyone) {
                     // Outro usuário escolheu este presente
                     cardClass += ' chosen';
@@ -842,15 +856,21 @@ function displayGifts(filteredGifts = null) {
                     
                     ${gift.url ? `
                         <div class="gift-link">
-                            <a href="${gift.url}" target="_blank" rel="noopener">
-                                <i class="fas fa-external-link-alt"></i> Ver/Comprar Online
+                            <a href="${gift.url}" target="_blank" rel="noopener" title="Link sugestivo - você pode comprar em qualquer loja">
+                                <i class="fas fa-external-link-alt"></i> Sugestão de Compra
                             </a>
+                            <small class="text-muted d-block mt-1">
+                                <i class="fas fa-lightbulb"></i> Você pode comprar em qualquer loja
+                            </small>
                         </div>
                     ` : ''}
                 </div>
             </div>
         `;
     }).join('');
+
+    // Combinar alerta + presentes
+    giftsGrid.innerHTML = infoAlert + giftsCards;
 
     console.log('✅ DisplayGifts concluído');
 }
@@ -936,6 +956,12 @@ function showSwitchGiftModal(currentGiftName, newGift) {
                     <div class="alert alert-warning mt-3">
                         <i class="fas fa-exclamation-triangle"></i>
                         <strong>Atenção:</strong> Ao confirmar, sua escolha atual será removida e substituída pelo novo presente.
+                    </div>
+                    
+                    <div class="alert alert-info mt-2">
+                        <i class="fas fa-lightbulb"></i>
+                        <strong>Lembre-se:</strong> Você pode comprar qualquer dos presentes em lojas de sua preferência, 
+                        mantendo a <strong>mesma cor</strong> para harmonia do conjunto.
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -1520,15 +1546,30 @@ function showGiftModal(gift) {
     document.getElementById('modalGiftImage').alt = gift.name;
     document.getElementById('modalGiftName').textContent = gift.name;
     document.getElementById('modalGiftCategory').textContent = gift.price ? `💰 ${gift.price}` : '';
-    document.getElementById('modalGiftDescription').textContent = `Você confirma a escolha deste presente?`;
+    document.getElementById('modalGiftDescription').innerHTML = `
+        <p>Você confirma a escolha deste presente?</p>
+        ${gift.url ? `
+            <div class="alert alert-light border mt-3 mb-0">
+                <small class="text-muted">
+                    <i class="fas fa-lightbulb"></i> 
+                    <strong>Lembre-se:</strong> O link abaixo é apenas uma sugestão. 
+                    Você pode comprar o mesmo produto <strong>com a mesma cor</strong> em qualquer loja de sua preferência.
+                </small>
+            </div>
+        ` : ''}
+    `;
     
     // Link de sugestão
     const linkDiv = document.getElementById('modalGiftLink');
     if (gift.url) {
         linkDiv.innerHTML = `
-            <a href="${gift.url}" target="_blank" class="btn btn-outline-primary" rel="noopener">
-                <i class="fas fa-external-link-alt"></i> Ver/Comprar Online
+            <a href="${gift.url}" target="_blank" class="btn btn-outline-primary" rel="noopener" title="Sugestão de compra - você pode comprar em qualquer loja">
+                <i class="fas fa-external-link-alt"></i> Sugestão de Compra
             </a>
+            <br>
+            <small class="text-muted mt-2 d-block">
+                <i class="fas fa-store"></i> Você pode comprar em qualquer loja física ou online
+            </small>
         `;
     } else {
         linkDiv.innerHTML = '';
