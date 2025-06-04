@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎁 Lista de Presentes - Arysson & Nicole</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="presentes.css">
+
+    <!-- Google Sheets API -->
+    <script src="https://apis.google.com/js/api.js"></script>
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header-section">
+        <div class="container">
+            <div class="text-center">
+                <div class="couple-names">Arysson & Nicole</div>
+                <h1><i class="fas fa-gift"></i> Lista de Presentes</h1>
+                <p class="lead">Ajude-nos a mobiliar nossa nova casa! 🏠💜</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container my-5">
+
+        <!-- Login Section -->
+        <div id="loginSection" class="login-container">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="login-card">
+                        <div class="text-center mb-4">
+                            <i class="fas fa-user-circle login-icon"></i>
+                            <h3>Acesso à Lista de Presentes</h3>
+                            <p class="text-muted">Digite seu email para acessar e escolher um presente</p>
+                        </div>
+
+                        <form id="loginForm">
+                            <div class="mb-3">
+                                <label for="userEmail" class="form-label">
+                                    <i class="fas fa-envelope"></i> Email
+                                </label>
+                                <input type="email" class="form-control" id="userEmail" placeholder="seu@email.com" required>
+                                <div class="form-text">Use o mesmo email da confirmação de presença</div>
+                            </div>
+
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary" id="loginBtn">
+                                    <i class="fas fa-sign-in-alt"></i> Acessar Lista
+                                </button>
+                            </div>
+                        </form>
+
+                        <div id="loginMessage" class="mt-3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gifts Section -->
+        <div id="giftsSection" class="gifts-container" style="display: none;">
+
+            <!-- User Info Bar -->
+            <div class="user-info-bar">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h4><i class="fas fa-user"></i> Olá, <span id="userName"></span>!</h4>
+                        <p class="mb-0">Escolha apenas <strong>1 presente</strong> da lista abaixo</p>
+                    </div>
+                    <div class="col-md-6 text-end">
+                        <button class="btn btn-outline-info me-2" onclick="window.location.href='index.html'">
+                            <i class="fas fa-arrow-left"></i> Voltar ao Convite
+                        </button>
+                        <button class="btn btn-outline-secondary" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i> Sair
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- User Status -->
+            <div id="userStatus" class="user-status"></div>
+
+            <!-- Filters -->
+            <div class="filters-section">
+                <div class="row">
+                    <div class="col-md-6">
+                        <select id="statusFilter" class="form-select">
+                            <option value="">Todos os presentes</option>
+                            <option value="disponivel">✅ Disponíveis</option>
+                            <option value="escolhido">🎁 Já escolhidos</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <input type="text" id="searchFilter" class="form-control" placeholder="🔍 Buscar presente...">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="statistics-section">
+                <div class="row text-center">
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-number" id="totalGifts">0</div>
+                            <div class="stat-label">Total de Presentes</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-number" id="availableGifts">0</div>
+                            <div class="stat-label">Disponíveis</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-number" id="chosenGifts">0</div>
+                            <div class="stat-label">Escolhidos</div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="stat-card">
+                            <div class="stat-number" id="completionRate">0%</div>
+                            <div class="stat-label">Progresso</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Bar -->
+            <div class="progress-section">
+                <div class="progress">
+                    <div class="progress-bar" id="progressBar" role="progressbar" style="width: 0%"></div>
+                </div>
+                <p class="text-center mt-2 text-muted">Progresso da lista de presentes</p>
+            </div>
+
+            <!-- Gifts Grid -->
+            <div id="giftsGrid" class="gifts-grid">
+                <!-- Loading -->
+                <div id="loadingGifts" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Carregando...</span>
+                    </div>
+                    <p class="mt-2">Carregando lista de presentes...</p>
+                </div>
+
+                <!-- Grid will be populated by JavaScript -->
+            </div>
+        </div>
+    </main>
+
+    <!-- New Guest Registration Modal -->
+    <div class="modal fade" id="newGuestModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user-plus"></i> Cadastro de Novo Convidado
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Seu email não foi encontrado na lista de convidados confirmados.</p>
+                    <p><strong>Não se preocupe!</strong> Vamos cadastrá-lo agora mesmo. 😊</p>
+
+                    <form id="newGuestForm">
+                        <div class="mb-3">
+                            <label for="newGuestName" class="form-label">
+                                <i class="fas fa-user"></i> Nome Completo *
+                            </label>
+                            <input type="text" class="form-control" id="newGuestName" placeholder="Digite seu nome completo" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="newGuestEmail" class="form-label">
+                                <i class="fas fa-envelope"></i> Email
+                            </label>
+                            <input type="email" class="form-control" id="newGuestEmail" readonly>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="newGuestCount" class="form-label">
+                                <i class="fas fa-users"></i> Quantidade de Pessoas
+                            </label>
+                            <select class="form-control" id="newGuestCount">
+                                <option value="1">Apenas eu (1 pessoa)</option>
+                                <option value="2">Eu + 1 acompanhante (2 pessoas)</option>
+                                <option value="3">Eu + 2 acompanhantes (3 pessoas)</option>
+                                <option value="4">Eu + 3 acompanhantes (4 pessoas)</option>
+                                <option value="5">Eu + 4 acompanhantes (5 pessoas)</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="confirmNewGuestBtn">
+                        <i class="fas fa-user-plus"></i> Cadastrar e Entrar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gift Selection Modal -->
+    <div class="modal fade" id="giftModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-gift"></i> Confirmar Escolha do Presente
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4">
+                            <img id="modalGiftImage" src="" alt="" class="img-fluid rounded">
+                        </div>
+                        <div class="col-md-8">
+                            <h4 id="modalGiftName"></h4>
+                            <p id="modalGiftCategory" class="text-muted"></p>
+                            <p id="modalGiftDescription"></p>
+
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>Importante:</strong> Você pode escolher apenas 1 presente. Tem certeza desta escolha?
+                            </div>
+
+                            <div id="modalGiftLink" class="mt-3"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="confirmGiftBtn">
+                        <i class="fas fa-heart"></i> Sim, Escolho Este Presente!
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal fade" id="successModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-check-circle"></i> Presente Escolhido!
+                    </h5>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="success-animation">🎉</div>
+                    <h4>Obrigado!</h4>
+                    <p>Seu presente foi registrado com sucesso!</p>
+                    <div id="chosenGiftInfo"></div>
+                    <p class="text-muted mt-3">Arysson & Nicole agradecem sua contribuição! 💜</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">
+                        <i class="fas fa-heart"></i> Fechar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Access -->
+    <div class="admin-access">
+        <a href="admin-presentes.html" class="btn btn-outline-dark btn-sm">
+            <i class="fas fa-cog"></i> Admin
+        </a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container text-center">
+            <p>&copy; 2025 Chá de Casa Nova - Arysson & Nicole 💜</p>
+            <p><a href="index.html" class="text-decoration-none">← Voltar ao Convite</a></p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- JavaScript personalizado -->
+    <script src="presentes.js"></script>
+</body>
+
+</html>

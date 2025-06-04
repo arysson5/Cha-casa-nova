@@ -927,8 +927,8 @@
                     <i class="fas fa-gift detail-icon"></i>
                     <h5>Lista de Presentes</h5>
                     <p>Sua presença já é o nosso maior presente, mas se quiser nos ajudar a mobiliar nossa nova casa:</p>
-                    <a href="https://aryenick.meuchadepanela.com.br/#/" target="_blank" class="gifts-link" id="giftsLink">
-                        <i class="fas fa-external-link-alt"></i> Ver Lista de Presentes
+                    <a href="presentes.html" class="gifts-link" id="giftsLink">
+                        <i class="fas fa-gift"></i> Ver Lista de Presentes
                     </a>
                 </div>
             </div>
@@ -951,22 +951,16 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-6">
-                            <input type="tel" class="form-control" id="guestPhone" name="guest_phone" placeholder="Seu telefone">
-                        </div>
-                        <div class="col-md-6">
-                            <select class="form-control" id="guestCount" name="guest_count" required>
-                                <option value="">Quantas pessoas?</option>
-                                <option value="1">Apenas eu</option>
-                                <option value="2">Eu + 1 acompanhante</option>
-                                <option value="3">Eu + 2 acompanhante</option>
-                                <option value="4">Eu + 3 acompanhante</option>
-                                <option value="5">Eu + 4 acompanhante</option>
+                        <div class="col-md-12">
+                            <select class="form-control" id="guestCount" name="guest_count">
+                                <option value="1">Apenas eu (1 pessoa)</option>
+                                <option value="2">Eu + 1 acompanhante (2 pessoas)</option>
+                                <option value="3">Eu + 2 acompanhantes (3 pessoas)</option>
+                                <option value="4">Eu + 3 acompanhantes (4 pessoas)</option>
+                                <option value="5">Eu + 4 acompanhantes (5 pessoas)</option>
                             </select>
                         </div>
                     </div>
-
-                    <textarea class="form-control" id="guestMessage" name="guest_message" rows="3" placeholder="Deixe uma mensagem carinhosa para nós (opcional)"></textarea>
 
                     <div class="text-center">
                         <button type="submit" class="btn btn-confirm" id="submitBtn">
@@ -986,7 +980,7 @@
                             <strong style="color: var(--primary-color);">Que tal dar uma olhadinha na nossa lista de presentes?</strong><br>
                             <span style="color: #666; font-size: 0.9em;">Sua contribuição nos ajudará muito a mobiliar nossa nova casa! 🏠✨</span>
                             <br>
-                            <button class="btn-gift-cta" id="btnGiftCta" style="background: var(--primary-color); color: white; border: none; padding: 8px 20px; border-radius: 20px; margin-top: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                            <button class="btn-gift-cta" id="btnGiftCta" style="background: var(--primary-color); color: white; border: none; padding: 8px 20px; border-radius: 20px; margin-top: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;" onclick="window.location.href='presentes.html'">
                                 <i class="fas fa-heart"></i> Ver Lista de Presentes
                             </button>
                         </div>
@@ -1012,7 +1006,7 @@
                 <p style="color: var(--primary-color); font-weight: 600; margin-bottom: 25px;">
                     Que tal dar uma olhadinha na nossa lista de presentes?
                 </p>
-                <a href="https://aryenick.meuchadepanela.com.br/#/" target="_blank" class="gift-button" id="viewGiftsBtn">
+                <a href="presentes.html" class="gift-button" id="viewGiftsBtn">
                     <i class="fas fa-gift"></i> Ver Lista de Presentes
                 </a>
                 <br>
@@ -1021,6 +1015,14 @@
                 </button>
             </div>
         </div>
+    </div>
+
+    <!-- Admin Access Button -->
+    <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+        <a href="admin-presentes.html" style="background: rgba(138, 43, 226, 0.8); color: white; padding: 8px 12px; border-radius: 20px; text-decoration: none; font-size: 0.8rem; box-shadow: 0 2px 10px rgba(0,0,0,0.2); transition: all 0.3s ease;" onmouseover="this.style.background='rgba(138, 43, 226, 1)'"
+            onmouseout="this.style.background='rgba(138, 43, 226, 0.8)'">
+            <i class="fas fa-cog"></i> Admin
+        </a>
     </div>
 
     <!-- Bootstrap JS -->
@@ -1083,13 +1085,15 @@
         document.getElementById('closeGiftModal').addEventListener('click', hideGiftModal);
         document.getElementById('maybeLaterBtn').addEventListener('click', hideGiftModal);
 
-        document.getElementById('viewGiftsBtn').addEventListener('click', function() {
+        document.getElementById('viewGiftsBtn').addEventListener('click', function(e) {
             // Adicionar efeito especial ao clicar
             createSparkles(this);
             this.style.transform = 'scale(0.95)';
+
+            // Redirecionar após animação
             setTimeout(() => {
                 this.style.transform = 'scale(1)';
-                hideGiftModal();
+                window.location.href = 'presentes.html';
             }, 200);
         });
 
@@ -1179,9 +1183,7 @@
             const formData = {
                 guest_name: document.getElementById('guestName').value,
                 guest_email: document.getElementById('guestEmail').value,
-                guest_phone: document.getElementById('guestPhone').value,
                 guest_count: document.getElementById('guestCount').value,
-                guest_message: document.getElementById('guestMessage').value,
                 event_date: document.getElementById('eventDate').textContent,
                 event_time: document.getElementById('eventTime').textContent,
                 event_location: document.getElementById('eventLocation').textContent
@@ -1195,9 +1197,7 @@
                 cc_email2: "nicolesantos904@gmail.com", // Email do organizador 2
                 guest_name: formData.guest_name,
                 guest_email: formData.guest_email,
-                guest_phone: formData.guest_phone,
                 guest_count: formData.guest_count,
-                guest_message: formData.guest_message || "Nenhuma mensagem especial",
                 event_date: formData.event_date,
                 event_time: formData.event_time,
                 event_location: formData.event_location,
