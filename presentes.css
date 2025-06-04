@@ -378,27 +378,51 @@ body {
 }
 
 .btn-choose {
-    background: var(--primary-color);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
-    padding: 10px 25px;
-    border-radius: 20px;
+    padding: 12px 24px;
+    border-radius: 25px;
     font-weight: 600;
     transition: all 0.3s ease;
-    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    width: 100%;
+    margin-top: 10px;
 }
 
 .btn-choose:hover {
-    background: var(--gradient-start);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(138, 43, 226, 0.4);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+    color: white;
 }
 
 .btn-choose:disabled {
-    background: #ccc;
+    background: #6c757d;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
+}
+
+.btn-unselect {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+
+.btn-unselect:hover {
+    background: linear-gradient(135deg, #ff5252 0%, #d32f2f 100%);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+    color: white;
+}
+
+.btn-switch {
+    background: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
+    box-shadow: 0 4px 15px rgba(255, 152, 0, 0.4);
+}
+
+.btn-switch:hover {
+    background: linear-gradient(135deg, #f57c00 0%, #e65100 100%);
+    box-shadow: 0 6px 20px rgba(255, 152, 0, 0.6);
+    color: white;
 }
 
 .gift-link {
@@ -435,7 +459,21 @@ body {
 }
 
 .user-chosen-indicator {
-    background: var(--success-color);
+    background: linear-gradient(135deg, #4caf50 0%, #2e7d32 100%);
+    color: white;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+    }
 }
 
 
@@ -546,18 +584,6 @@ body {
     }
     60% {
         transform: translateY(-10px);
-    }
-}
-
-@keyframes pulse {
-    0% {
-        transform: scale(1);
-    }
-    50% {
-        transform: scale(1.05);
-    }
-    100% {
-        transform: scale(1);
     }
 }
 

@@ -175,6 +175,25 @@ function doGet(e) {
                 result = deleteGift(deleteGiftData);
                 break;
 
+            case 'switchGift':
+                // Processar troca de presente via GET parameters
+                const switchData = {
+                    guestEmail: e.parameter.guestEmail || '',
+                    guestName: e.parameter.guestName || '',
+                    newGiftName: e.parameter.newGiftName || ''
+                };
+                result = switchGift(switchData);
+                break;
+
+            case 'unselectGift':
+                // Processar desmarcação de presente via GET parameters
+                const unselectData = {
+                    guestEmail: e.parameter.guestEmail || '',
+                    giftName: e.parameter.giftName || ''
+                };
+                result = unselectGift(unselectData);
+                break;
+
             default:
                 result = { message: 'API do Sistema de Presentes ativa' };
         }
@@ -377,6 +396,103 @@ function deleteGift(deleteData) {
             giftName: giftName,
             deletedGifts: deletedGifts,
             deletedChoices: deletedChoices
+        }
+    };
+}
+
+/**
+ * Trocar presente escolhido por um convidado
+ */
+function switchGift(switchData) {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const guestEmail = switchData.guestEmail;
+    const guestName = switchData.guestName;
+    const newGiftName = switchData.newGiftName;
+
+    if (!guestEmail || !newGiftName) {
+        throw new Error('Email do convidado e nome do novo presente são obrigatórios');
+    }
+
+    const chosenSheet = ss.getSheetByName('Escolhidos');
+    if (!chosenSheet) {
+        throw new Error('Aba "Escolhidos" não encontrada');
+    }
+
+    const chosenData = chosenSheet.getDataRange().getValues();
+    let oldGiftName = '';
+    let updated = false;
+
+    // Encontrar e atualizar a escolha do convidado
+    for (let i = 1; i < chosenData.length; i++) { // Começar do índice 1 para pular cabeçalho
+        if (chosenData[i][0] === guestEmail) { // Coluna 0 = Email
+            oldGiftName = chosenData[i][2]; // Coluna 2 = Nome do Presente atual
+
+            // Atualizar a linha
+            chosenSheet.getRange(i + 1, 1, 1, 3).setValues([
+                [
+                    guestEmail,
+                    guestName,
+                    newGiftName
+                ]
+            ]);
+
+            updated = true;
+            break;
+        }
+    }
+
+    if (!updated) {
+        throw new Error('Escolha do convidado não encontrada');
+    }
+
+    return {
+        message: `Presente trocado com sucesso`,
+        data: {
+            guestEmail: guestEmail,
+            oldGiftName: oldGiftName,
+            newGiftName: newGiftName
+        }
+    };
+}
+
+/**
+ * Desmarcar presente escolhido por um convidado
+ */
+function unselectGift(unselectData) {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const guestEmail = unselectData.guestEmail;
+    const giftName = unselectData.giftName;
+
+    if (!guestEmail || !giftName) {
+        throw new Error('Email do convidado e nome do presente são obrigatórios');
+    }
+
+    const chosenSheet = ss.getSheetByName('Escolhidos');
+    if (!chosenSheet) {
+        throw new Error('Aba "Escolhidos" não encontrada');
+    }
+
+    const chosenData = chosenSheet.getDataRange().getValues();
+    let removed = false;
+
+    // Encontrar e remover a escolha do convidado (de baixo para cima)
+    for (let i = chosenData.length - 1; i >= 1; i--) { // Começar do índice 1 para pular cabeçalho
+        if (chosenData[i][0] === guestEmail && chosenData[i][2] === giftName) {
+            chosenSheet.deleteRow(i + 1); // +1 porque getDataRange é 0-indexed mas deleteRow é 1-indexed
+            removed = true;
+            break; // Sair do loop após encontrar e remover
+        }
+    }
+
+    if (!removed) {
+        throw new Error('Escolha do convidado não encontrada');
+    }
+
+    return {
+        message: `Presente "${giftName}" desmarcado com sucesso`,
+        data: {
+            guestEmail: guestEmail,
+            giftName: giftName
         }
     };
 }

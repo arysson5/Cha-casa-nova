@@ -3,7 +3,7 @@
 // =============================
 const GOOGLE_CONFIG = {
     // Google Apps Script (Nova API melhorada)
-    webAppUrl: 'https://script.google.com/macros/s/AKfycbx_DSOIhw0uz2LcQTSarIQbEbscovu6WGza6Bua4IsqN5o99rFKJnncqmlm0zVek2Ej/exec',
+    webAppUrl: 'https://script.google.com/macros/s/AKfycbxjMP4PkKniGUG4is7f7pwf_sHELCz4zUZMzqZeg5AMOmeqUuvqTW21KSDrn1h1Fh61/exec',
 
     // Fallback para API Key (somente leitura)
     apiKey: 'AIzaSyBW98wPFQdj5DscddMnWNG3TBQptj69uPI',
@@ -801,7 +801,11 @@ function displayGifts(filteredGifts = null) {
                     // O usuário atual escolheu este presente
                     cardClass += ' user-chosen';
                     indicator = '<div class="chosen-indicator user-chosen-indicator">🎁 Sua Escolha</div>';
-                    actionButton = '<button class="btn-choose" disabled>✅ Você Escolheu</button>';
+                    actionButton = `
+                        <button class="btn-choose btn-unselect" onclick="unselectGift('${gift.name}')">
+                            🗑️ Desmarcar
+                        </button>
+                    `;
                 } else if (isChosenByAnyone) {
                     // Outro usuário escolheu este presente
                     cardClass += ' chosen';
@@ -810,9 +814,12 @@ function displayGifts(filteredGifts = null) {
                 } else if (userCanChoose) {
                     // Usuário pode escolher este presente
                     actionButton = `<button class="btn-choose" onclick="selectGift('${gift.name}')">🎁 Escolher Este</button>`;
+                } else if (userHasChosen) {
+                    // Usuário já escolheu outro presente - opção de trocar
+                    actionButton = `<button class="btn-choose btn-switch" onclick="selectGift('${gift.name}')">🔄 Trocar por Este</button>`;
                 } else {
-                    // Usuário já escolheu outro presente
-                    actionButton = '<button class="btn-choose" disabled>✋ Você já escolheu outro</button>';
+                    // Fallback
+                    actionButton = '<button class="btn-choose" disabled>✋ Indisponível</button>';
                 }
 
                 return `
@@ -849,91 +856,180 @@ function displayGifts(filteredGifts = null) {
 }
 
 // =============================
-// SELEÇÃO DE PRESENTES
+// SELEÇÃO DE PRESENTES (ATUALIZADA)
 // =============================
 function selectGift(giftName) {
     const gift = allGifts.find(g => g.name === giftName);
     if (!gift) return;
     
-    // Verificar se usuário pode escolher
-    if (hasUserChosenGift()) {
-        showMessage('Você já escolheu um presente!', 'warning');
-        return;
-    }
+    const userHasChosenAlready = hasUserChosenGift();
+    const isGiftAlreadyChosen = isGiftChosen(giftName);
     
-    if (isGiftChosen(giftName)) {
+    // Se presente já foi escolhido por outro usuário
+    if (isGiftAlreadyChosen) {
         showMessage('Este presente já foi escolhido por outro convidado.', 'warning');
         return;
     }
     
-    // Mostrar modal de confirmação
+    // Se usuário já tem uma escolha, mostrar modal de troca
+    if (userHasChosenAlready) {
+        const currentChoice = getUserChosenGift();
+        showSwitchGiftModal(currentChoice.giftName, gift);
+        return;
+    }
+    
+    // Primeira escolha normal
     showGiftModal(gift);
 }
 
-function showGiftModal(gift) {
-    // Preencher dados do modal
-    document.getElementById('modalGiftImage').src = gift.imageUrl;
-    document.getElementById('modalGiftImage').alt = gift.name;
-    document.getElementById('modalGiftName').textContent = gift.name;
-    document.getElementById('modalGiftCategory').textContent = gift.price ? `💰 ${gift.price}` : '';
-    document.getElementById('modalGiftDescription').textContent = `Você confirma a escolha deste presente?`;
+function unselectGift(giftName) {
+    const userChoice = getUserChosenGift();
     
-    // Link de sugestão
-    const linkDiv = document.getElementById('modalGiftLink');
-    if (gift.url) {
-        linkDiv.innerHTML = `
-            <a href="${gift.url}" target="_blank" class="btn btn-outline-primary" rel="noopener">
-                <i class="fas fa-external-link-alt"></i> Ver/Comprar Online
-            </a>
-        `;
-    } else {
-        linkDiv.innerHTML = '';
+    if (!userChoice || userChoice.giftName !== giftName) {
+        showMessage('Erro: Este não é seu presente escolhido.', 'danger');
+        return;
     }
     
-    // Configurar botão de confirmação
-    const confirmBtn = document.getElementById('confirmGiftBtn');
-    confirmBtn.onclick = () => confirmGiftSelection(gift.name);
-    
-    // Mostrar modal
-    const modal = new bootstrap.Modal(document.getElementById('giftModal'));
-    modal.show();
+    // Mostrar modal de confirmação de desmarcação
+    showUnselectModal(giftName);
 }
 
-async function confirmGiftSelection(giftName = null) {
-    // Se chamado do botão do modal, pegar o giftName do modal
-    if (!giftName) {
-        const giftNameElement = document.getElementById('modalGiftName').textContent;
-        giftName = giftNameElement;
-    }
+function showSwitchGiftModal(currentGiftName, newGift) {
+    // Criar modal dinâmico para troca
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.innerHTML = `
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title">
+                        <i class="fas fa-exchange-alt"></i> Trocar Presente?
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="text-center">
+                                <h6 class="text-muted">Presente Atual</h6>
+                                <div class="border rounded p-3 bg-light">
+                                    <i class="fas fa-gift fa-2x text-secondary mb-2"></i>
+                                    <h5>${currentGiftName}</h5>
+                                    <small class="text-muted">Sua escolha atual</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="text-center">
+                                <h6 class="text-muted">Novo Presente</h6>
+                                <div class="border rounded p-3 bg-primary bg-opacity-10">
+                                    <img src="${newGift.imageUrl}" alt="${newGift.name}" 
+                                         class="img-fluid rounded mb-2" style="max-height: 80px;"
+                                         onerror="this.src='${DEFAULT_GIFT_IMAGE}'">
+                                    <h5>${newGift.name}</h5>
+                                    ${newGift.price ? `<p class="text-muted mb-0">💰 ${newGift.price}</p>` : ''}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-warning mt-3">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <strong>Atenção:</strong> Ao confirmar, sua escolha atual será removida e substituída pelo novo presente.
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-warning" onclick="confirmSwitchGift('${newGift.name}')">
+                        <i class="fas fa-exchange-alt"></i> Confirmar Troca
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
     
-    if (!giftName) return;
+    document.body.appendChild(modal);
+    const modalInstance = new bootstrap.Modal(modal);
+    modalInstance.show();
     
-    const gift = allGifts.find(g => g.name === giftName);
-    if (!gift) return;
+    // Cleanup quando modal fechar
+    modal.addEventListener('hidden.bs.modal', () => {
+        document.body.removeChild(modal);
+    });
+}
+
+function showUnselectModal(giftName) {
+    // Criar modal dinâmico para desmarcação
+    const modal = document.createElement('div');
+    modal.className = 'modal fade';
+    modal.innerHTML = `
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-trash-alt"></i> Desmarcar Presente?
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center">
+                        <i class="fas fa-question-circle fa-3x text-warning mb-3"></i>
+                        <h5>Tem certeza?</h5>
+                        <p>Você está prestes a desmarcar:</p>
+                        <div class="border rounded p-3 bg-light">
+                            <h6><strong>${giftName}</strong></h6>
+                        </div>
+                        <p class="text-muted mt-3">
+                            Esta ação fará com que o presente volte a ficar disponível para outros convidados.
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" onclick="confirmUnselectGift('${giftName}')">
+                        <i class="fas fa-trash-alt"></i> Sim, Desmarcar
+                    </button>
+                </div>
+            </div>
+        </div>
+    `;
     
-    const confirmBtn = document.getElementById('confirmGiftBtn');
-    const originalText = confirmBtn.innerHTML;
+    document.body.appendChild(modal);
+    const modalInstance = new bootstrap.Modal(modal);
+    modalInstance.show();
+    
+    // Cleanup quando modal fechar
+    modal.addEventListener('hidden.bs.modal', () => {
+        document.body.removeChild(modal);
+    });
+}
+
+async function confirmSwitchGift(newGiftName) {
+    const newGift = allGifts.find(g => g.name === newGiftName);
+    if (!newGift) return;
     
     try {
-        // Loading state
-        confirmBtn.disabled = true;
-        confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Confirmando...';
-        
-        // Salvar escolha na planilha
-        await saveGiftChoice(gift);
-        
-        // Atualizar dados locais
-        const choiceData = {
-            guestEmail: currentUser.email,
-            guestName: currentUser.name,
-            giftName: gift.name
-        };
-        
-        chosenGifts.push(choiceData);
+        console.log('🔄 Iniciando troca de presente para:', newGiftName);
         
         // Fechar modal atual
-        const modal = bootstrap.Modal.getInstance(document.getElementById('giftModal'));
-        modal.hide();
+        const modal = document.querySelector('.modal.show');
+        if (modal) {
+            const modalInstance = bootstrap.Modal.getInstance(modal);
+            modalInstance.hide();
+        }
+        
+        // Executar troca
+        await switchGiftChoice(newGift);
+        
+        // Atualizar dados locais
+        const currentUserChoice = chosenGifts.find(choice => choice.guestEmail === currentUser.email);
+        if (currentUserChoice) {
+            currentUserChoice.giftName = newGift.name;
+        }
         
         // Atualizar interface
         updateUserStatus();
@@ -941,144 +1037,42 @@ async function confirmGiftSelection(giftName = null) {
         displayGifts();
         
         // Mostrar modal de sucesso
-        showSuccessModal(gift);
+        showSuccessModal(newGift, 'trocado');
         
     } catch (error) {
-        console.error('Erro ao confirmar presente:', error);
-        showMessage('Erro ao confirmar presente. Tente novamente.', 'danger');
-    } finally {
-        confirmBtn.disabled = false;
-        confirmBtn.innerHTML = originalText;
+        console.error('Erro ao trocar presente:', error);
+        showMessage('❌ Erro ao trocar presente: ' + error.message, 'danger');
     }
 }
 
-async function saveGiftChoice(gift) {
+async function confirmUnselectGift(giftName) {
     try {
-        console.log(`💾 Salvando escolha: ${gift.name} para ${currentUser.email}`);
+        console.log('🗑️ Iniciando desmarcação do presente:', giftName);
         
-        // 1. PRIMEIRA TENTATIVA: Apps Script (preferencial)
-        if (hasAppsScript) {
-            try {
-                console.log('📡 Tentando salvar via Apps Script...');
-                await saveChoiceViaAppsScript(gift);
-                console.log('✅ Salvo com sucesso via Apps Script!');
-                return;
-            } catch (appsScriptError) {
-                console.warn('⚠️ Apps Script falhou:', appsScriptError.message);
-                hasAppsScript = false; // Marcar como indisponível
-            }
+        // Fechar modal atual
+        const modal = document.querySelector('.modal.show');
+        if (modal) {
+            const modalInstance = bootstrap.Modal.getInstance(modal);
+            modalInstance.hide();
         }
         
-        // 2. SEGUNDA TENTATIVA: Google Sheets API (vai falhar, mas tentamos)
-        try {
-            console.log('📡 Tentando salvar via Google Sheets API...');
-            await saveChoiceViaApi(gift);
-            console.log('✅ Salvo com sucesso via API!');
-            return;
-        } catch (apiError) {
-            console.warn('⚠️ Google Sheets API falhou:', apiError.message);
-        }
+        // Executar desmarcação
+        await unselectGiftChoice(giftName);
         
-        // 3. FALLBACK: Salvamento manual
-        console.log('📋 Usando fallback de salvamento manual');
-        await showManualSaveInstructions(gift);
+        // Remover dos dados locais
+        chosenGifts = chosenGifts.filter(choice => choice.guestEmail !== currentUser.email);
+        
+        // Atualizar interface
+        updateUserStatus();
+        updateStatistics();
+        displayGifts();
+        
+        showMessage('✅ Presente desmarcado com sucesso! Agora você pode escolher outro.', 'success');
         
     } catch (error) {
-        console.error('❌ Erro geral ao salvar:', error);
-        await showManualSaveInstructions(gift);
+        console.error('Erro ao desmarcar presente:', error);
+        showMessage('❌ Erro ao desmarcar presente: ' + error.message, 'danger');
     }
-}
-
-async function saveChoiceViaAppsScript(gift) {
-    try {
-        console.log('📡 Salvando escolha via Nova Apps Script API (GET)...');
-        
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 segundos
-        
-        // Usar GET com query parameters para evitar CORS completamente
-        const params = new URLSearchParams({
-            action: 'chooseGift',
-            guestEmail: currentUser.email,
-            guestName: currentUser.name,
-            giftName: gift.name
-        });
-
-        const response = await fetch(GOOGLE_CONFIG.webAppUrl + '?' + params.toString(), {
-            method: 'GET',
-            signal: controller.signal
-        });
-
-        clearTimeout(timeoutId);
-
-        if (!response.ok) {
-            throw new Error(`Nova API HTTP ${response.status}: ${response.statusText}`);
-        }
-
-        const result = await response.json();
-        console.log('📡 Resposta da Nova API (chooseGift):', result);
-
-        if (!result.success) {
-            throw new Error(result.error || result.message || 'Erro ao escolher presente na Nova API');
-        }
-
-        console.log('✅ Presente escolhido com sucesso via Nova API:', result);
-
-    } catch (error) {
-        if (error.name === 'AbortError') {
-            throw new Error('Nova API timeout ao escolher presente');
-        }
-        
-        console.error('❌ Erro ao escolher presente via Nova API:', error);
-        throw new Error(`Nova API falhou ao escolher presente: ${error.message}`);
-    }
-}
-
-async function saveChoiceViaApi(gift) {
-    try {
-        const choiceData = [
-            currentUser.email,
-            currentUser.name,
-            gift.name
-        ];
-        
-        const response = await gapi.client.sheets.spreadsheets.values.append({
-            spreadsheetId: GOOGLE_CONFIG.spreadsheetId,
-            range: GOOGLE_CONFIG.sheets.escolhidos,
-            valueInputOption: 'RAW',
-            resource: {
-                values: [choiceData]
-            }
-        });
-        
-        console.log('✅ API salvou com sucesso:', response);
-        
-    } catch (error) {
-        console.error('❌ Erro detalhado na API:', error);
-        
-        // Tratamento específico para erro 401 (sem permissão)
-        if (error.status === 401) {
-            throw new Error('API sem permissão de escrita (erro 401)');
-        }
-        
-        // Outros erros da API
-        throw new Error(`Google Sheets API falhou: ${error.message}`);
-    }
-}
-
-function showSuccessModal(gift) {
-    // Atualizar conteúdo do modal de sucesso
-    document.getElementById('chosenGiftInfo').innerHTML = `
-        <div class="text-center">
-            <div style="font-size: 2rem; margin: 15px 0;">🎁</div>
-            <h5>${gift.name}</h5>
-            ${gift.price ? `<p class="text-muted">💰 ${gift.price}</p>` : ''}
-        </div>
-    `;
-    
-    // Mostrar modal
-    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
-    successModal.show();
 }
 
 // =============================
@@ -1146,10 +1140,13 @@ function getMessageIcon(type) {
 }
 
 // =============================
-// FUNÇÕES UTILITÁRIAS GLOBAIS
+// FUNÇÕES UTILITÁRIAS GLOBAIS (ATUALIZADAS)
 // =============================
 window.selectGift = selectGift;
+window.unselectGift = unselectGift;
 window.confirmGiftSelection = confirmGiftSelection;
+window.confirmSwitchGift = confirmSwitchGift;
+window.confirmUnselectGift = confirmUnselectGift;
 
 // =============================
 // TRATAMENTO DE ERROS
@@ -1516,3 +1513,386 @@ async function loadDataViaAppsScript() {
 
 // Disponibilizar globalmente para debug
 window.loadViaNewAPI = loadDataViaAppsScript;
+
+function showGiftModal(gift) {
+    // Preencher dados do modal
+    document.getElementById('modalGiftImage').src = gift.imageUrl;
+    document.getElementById('modalGiftImage').alt = gift.name;
+    document.getElementById('modalGiftName').textContent = gift.name;
+    document.getElementById('modalGiftCategory').textContent = gift.price ? `💰 ${gift.price}` : '';
+    document.getElementById('modalGiftDescription').textContent = `Você confirma a escolha deste presente?`;
+    
+    // Link de sugestão
+    const linkDiv = document.getElementById('modalGiftLink');
+    if (gift.url) {
+        linkDiv.innerHTML = `
+            <a href="${gift.url}" target="_blank" class="btn btn-outline-primary" rel="noopener">
+                <i class="fas fa-external-link-alt"></i> Ver/Comprar Online
+            </a>
+        `;
+    } else {
+        linkDiv.innerHTML = '';
+    }
+    
+    // Configurar botão de confirmação
+    const confirmBtn = document.getElementById('confirmGiftBtn');
+    confirmBtn.onclick = () => confirmGiftSelection(gift.name);
+    
+    // Mostrar modal
+    const modal = new bootstrap.Modal(document.getElementById('giftModal'));
+    modal.show();
+}
+
+async function confirmGiftSelection(giftName = null) {
+    // Se chamado do botão do modal, pegar o giftName do modal
+    if (!giftName) {
+        const giftNameElement = document.getElementById('modalGiftName').textContent;
+        giftName = giftNameElement;
+    }
+    
+    if (!giftName) return;
+    
+    const gift = allGifts.find(g => g.name === giftName);
+    if (!gift) return;
+    
+    const confirmBtn = document.getElementById('confirmGiftBtn');
+    const originalText = confirmBtn.innerHTML;
+    
+    try {
+        // Loading state
+        confirmBtn.disabled = true;
+        confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Confirmando...';
+        
+        // Salvar escolha na planilha
+        await saveGiftChoice(gift);
+        
+        // Atualizar dados locais
+        const choiceData = {
+            guestEmail: currentUser.email,
+            guestName: currentUser.name,
+            giftName: gift.name
+        };
+        
+        chosenGifts.push(choiceData);
+        
+        // Fechar modal atual
+        const modal = bootstrap.Modal.getInstance(document.getElementById('giftModal'));
+        modal.hide();
+        
+        // Atualizar interface
+        updateUserStatus();
+        updateStatistics();
+        displayGifts();
+        
+        // Mostrar modal de sucesso
+        showSuccessModal(gift);
+        
+    } catch (error) {
+        console.error('Erro ao confirmar presente:', error);
+        showMessage('Erro ao confirmar presente. Tente novamente.', 'danger');
+    } finally {
+        confirmBtn.disabled = false;
+        confirmBtn.innerHTML = originalText;
+    }
+}
+
+async function saveGiftChoice(gift) {
+    try {
+        console.log(`💾 Salvando escolha: ${gift.name} para ${currentUser.email}`);
+        
+        // 1. PRIMEIRA TENTATIVA: Apps Script (preferencial)
+        if (hasAppsScript) {
+            try {
+                console.log('📡 Tentando salvar via Apps Script...');
+                await saveChoiceViaAppsScript(gift);
+                console.log('✅ Salvo com sucesso via Apps Script!');
+                return;
+            } catch (appsScriptError) {
+                console.warn('⚠️ Apps Script falhou:', appsScriptError.message);
+                hasAppsScript = false; // Marcar como indisponível
+            }
+        }
+        
+        // 2. SEGUNDA TENTATIVA: Google Sheets API (vai falhar, mas tentamos)
+        try {
+            console.log('📡 Tentando salvar via Google Sheets API...');
+            await saveChoiceViaApi(gift);
+            console.log('✅ Salvo com sucesso via API!');
+            return;
+        } catch (apiError) {
+            console.warn('⚠️ Google Sheets API falhou:', apiError.message);
+        }
+        
+        // 3. FALLBACK: Salvamento manual
+        console.log('📋 Usando fallback de salvamento manual');
+        await showManualSaveInstructions(gift);
+        
+    } catch (error) {
+        console.error('❌ Erro geral ao salvar:', error);
+        await showManualSaveInstructions(gift);
+    }
+}
+
+async function saveChoiceViaAppsScript(gift) {
+    try {
+        console.log('📡 Salvando escolha via Nova Apps Script API (GET)...');
+        
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        
+        // Usar GET com query parameters para evitar CORS completamente
+        const params = new URLSearchParams({
+            action: 'chooseGift',
+            guestEmail: currentUser.email,
+            guestName: currentUser.name,
+            giftName: gift.name
+        });
+
+        const response = await fetch(GOOGLE_CONFIG.webAppUrl + '?' + params.toString(), {
+            method: 'GET',
+            signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+            throw new Error(`Nova API HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        console.log('📡 Resposta da Nova API (chooseGift):', result);
+
+        if (!result.success) {
+            throw new Error(result.error || result.message || 'Erro ao escolher presente na Nova API');
+        }
+
+        console.log('✅ Presente escolhido com sucesso via Nova API:', result);
+
+    } catch (error) {
+        if (error.name === 'AbortError') {
+            throw new Error('Nova API timeout ao escolher presente');
+        }
+        
+        console.error('❌ Erro ao escolher presente via Nova API:', error);
+        throw new Error(`Nova API falhou ao escolher presente: ${error.message}`);
+    }
+}
+
+async function saveChoiceViaApi(gift) {
+    try {
+        const choiceData = [
+            currentUser.email,
+            currentUser.name,
+            gift.name
+        ];
+        
+        const response = await gapi.client.sheets.spreadsheets.values.append({
+            spreadsheetId: GOOGLE_CONFIG.spreadsheetId,
+            range: GOOGLE_CONFIG.sheets.escolhidos,
+            valueInputOption: 'RAW',
+            resource: {
+                values: [choiceData]
+            }
+        });
+        
+        console.log('✅ API salvou com sucesso:', response);
+        
+    } catch (error) {
+        console.error('❌ Erro detalhado na API:', error);
+        
+        // Tratamento específico para erro 401 (sem permissão)
+        if (error.status === 401) {
+            throw new Error('API sem permissão de escrita (erro 401)');
+        }
+        
+        // Outros erros da API
+        throw new Error(`Google Sheets API falhou: ${error.message}`);
+    }
+}
+
+function showSuccessModal(gift, action = 'escolhido') {
+    // Atualizar conteúdo do modal de sucesso
+    const actionText = action === 'trocado' ? 'Presente Trocado!' : 'Presente Escolhido!';
+    const icon = action === 'trocado' ? '🔄' : '🎁';
+    
+    document.getElementById('chosenGiftInfo').innerHTML = `
+        <div class="text-center">
+            <div style="font-size: 2rem; margin: 15px 0;">${icon}</div>
+            <h5>${gift.name}</h5>
+            ${gift.price ? `<p class="text-muted">💰 ${gift.price}</p>` : ''}
+        </div>
+    `;
+    
+    // Atualizar título se for troca
+    if (action === 'trocado') {
+        document.querySelector('#successModal .modal-title').innerHTML = `
+            <i class="fas fa-exchange-alt"></i> ${actionText}
+        `;
+    }
+    
+    // Mostrar modal
+    const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+    successModal.show();
+}
+
+// =============================
+// NOVAS FUNÇÕES PARA TROCA E DESMARCAÇÃO
+// =============================
+
+async function switchGiftChoice(newGift) {
+    try {
+        console.log(`🔄 Trocando presente para: ${newGift.name}`);
+        
+        // 1. PRIMEIRA TENTATIVA: Apps Script
+        if (hasAppsScript) {
+            try {
+                await switchGiftViaAppsScript(newGift);
+                console.log('✅ Troca realizada via Apps Script!');
+                return;
+            } catch (appsScriptError) {
+                console.warn('⚠️ Apps Script falhou para troca:', appsScriptError.message);
+                hasAppsScript = false;
+            }
+        }
+        
+        // 2. FALLBACK: Instruções manuais
+        console.log('📋 Usando troca manual');
+        await showManualSwitchInstructions(newGift);
+        
+    } catch (error) {
+        console.error('❌ Erro geral ao trocar:', error);
+        throw error;
+    }
+}
+
+async function unselectGiftChoice(giftName) {
+    try {
+        console.log(`🗑️ Desmarcando presente: ${giftName}`);
+        
+        // 1. PRIMEIRA TENTATIVA: Apps Script
+        if (hasAppsScript) {
+            try {
+                await unselectGiftViaAppsScript(giftName);
+                console.log('✅ Desmarcação realizada via Apps Script!');
+                return;
+            } catch (appsScriptError) {
+                console.warn('⚠️ Apps Script falhou para desmarcação:', appsScriptError.message);
+                hasAppsScript = false;
+            }
+        }
+        
+        // 2. FALLBACK: Instruções manuais
+        console.log('📋 Usando desmarcação manual');
+        await showManualUnselectInstructions(giftName);
+        
+    } catch (error) {
+        console.error('❌ Erro geral ao desmarcar:', error);
+        throw error;
+    }
+}
+
+async function switchGiftViaAppsScript(newGift) {
+    try {
+        console.log('📡 Trocando presente via Nova Apps Script API (GET)...');
+        
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        
+        const params = new URLSearchParams({
+            action: 'switchGift',
+            guestEmail: currentUser.email,
+            guestName: currentUser.name,
+            newGiftName: newGift.name
+        });
+
+        const response = await fetch(GOOGLE_CONFIG.webAppUrl + '?' + params.toString(), {
+            method: 'GET',
+            signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+            throw new Error(`Nova API HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        console.log('📡 Resposta da Nova API (switchGift):', result);
+
+        if (!result.success) {
+            throw new Error(result.error || result.message || 'Erro ao trocar presente na Nova API');
+        }
+
+        console.log('✅ Presente trocado com sucesso via Nova API:', result);
+
+    } catch (error) {
+        if (error.name === 'AbortError') {
+            throw new Error('Nova API timeout ao trocar presente');
+        }
+        
+        console.error('❌ Erro ao trocar presente via Nova API:', error);
+        throw new Error(`Nova API falhou ao trocar presente: ${error.message}`);
+    }
+}
+
+async function unselectGiftViaAppsScript(giftName) {
+    try {
+        console.log('📡 Desmarcando presente via Nova Apps Script API (GET)...');
+        
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+        
+        const params = new URLSearchParams({
+            action: 'unselectGift',
+            guestEmail: currentUser.email,
+            giftName: giftName
+        });
+
+        const response = await fetch(GOOGLE_CONFIG.webAppUrl + '?' + params.toString(), {
+            method: 'GET',
+            signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+            throw new Error(`Nova API HTTP ${response.status}: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        console.log('📡 Resposta da Nova API (unselectGift):', result);
+
+        if (!result.success) {
+            throw new Error(result.error || result.message || 'Erro ao desmarcar presente na Nova API');
+        }
+
+        console.log('✅ Presente desmarcado com sucesso via Nova API:', result);
+
+    } catch (error) {
+        if (error.name === 'AbortError') {
+            throw new Error('Nova API timeout ao desmarcar presente');
+        }
+        
+        console.error('❌ Erro ao desmarcar presente via Nova API:', error);
+        throw new Error(`Nova API falhou ao desmarcar presente: ${error.message}`);
+    }
+}
+
+function showManualSwitchInstructions(newGift) {
+    const currentChoice = getUserChosenGift();
+    
+    showMessage(`
+        ✅ Troca registrada localmente!<br>
+        <strong>Antes:</strong> ${currentChoice.giftName}<br>
+        <strong>Depois:</strong> ${newGift.name}<br>
+        <em>Notifique os organizadores sobre a troca.</em>
+    `, 'warning');
+}
+
+function showManualUnselectInstructions(giftName) {
+    showMessage(`
+        ✅ Desmarcação registrada localmente!<br>
+        <strong>Presente:</strong> ${giftName}<br>
+        <em>Notifique os organizadores sobre a desmarcação.</em>
+    `, 'warning');
+}

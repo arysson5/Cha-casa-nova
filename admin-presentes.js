@@ -3,7 +3,7 @@
 // =============================
 const ADMIN_CONFIG = {
     // URL do Google Apps Script (Nova API melhorada)
-    webAppUrl: 'https://script.google.com/macros/s/AKfycbx_DSOIhw0uz2LcQTSarIQbEbscovu6WGza6Bua4IsqN5o99rFKJnncqmlm0zVek2Ej/exec',
+    webAppUrl: 'https://script.google.com/macros/s/AKfycbxjMP4PkKniGUG4is7f7pwf_sHELCz4zUZMzqZeg5AMOmeqUuvqTW21KSDrn1h1Fh61/exec',
 
     // Configurações de acesso
     adminPassword: 'admin123', // Altere para uma senha mais segura
@@ -770,6 +770,7 @@ async function handleAddGift(e) {
 async function saveGiftViaAppsScript(giftData) {
     try {
         console.log('📡 Salvando presente via Nova Apps Script API (GET)...');
+        console.log('🔍 Dados do presente recebidos:', giftData);
 
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), ADMIN_CONFIG.timeout);
@@ -782,6 +783,14 @@ async function saveGiftViaAppsScript(giftData) {
             price: giftData.price || '',
             imageUrl: giftData.imageUrl || ''
         });
+
+        console.log('🔍 Parâmetros sendo enviados:');
+        console.log('  - action: addGift');
+        console.log('  - name:', giftData.name || '(vazio)');
+        console.log('  - url:', giftData.url || '(vazio)');
+        console.log('  - price:', giftData.price || '(vazio)');
+        console.log('  - imageUrl:', giftData.imageUrl || '(vazio)');
+        console.log('🔍 URL completa:', ADMIN_CONFIG.webAppUrl + '?' + params.toString());
 
         const response = await fetch(ADMIN_CONFIG.webAppUrl + '?' + params.toString(), {
             method: 'GET',
