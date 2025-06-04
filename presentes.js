@@ -1937,3 +1937,61 @@ function showManualUnselectInstructions(giftName) {
         <em>Notifique os organizadores sobre a desmarcação.</em>
     `, 'warning');
 }
+
+// Função para copiar endereço
+window.copyAddress = function() {
+    const address = `R. Canes, 18 - Veleiros
+São Paulo - SP, CEP: 04773-040`;
+    
+    if (navigator.clipboard && window.isSecureContext) {
+        // Usar API moderna de clipboard
+        navigator.clipboard.writeText(address).then(() => {
+            showCopySuccess();
+        }).catch(err => {
+            console.error('Erro ao copiar:', err);
+            fallbackCopyAddress(address);
+        });
+    } else {
+        // Fallback para navegadores mais antigos
+        fallbackCopyAddress(address);
+    }
+};
+
+function fallbackCopyAddress(text) {
+    // Criar elemento temporário
+    const textArea = document.createElement('textarea');
+    textArea.value = text;
+    textArea.style.position = 'fixed';
+    textArea.style.left = '-999999px';
+    textArea.style.top = '-999999px';
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    
+    try {
+        document.execCommand('copy');
+        showCopySuccess();
+    } catch (err) {
+        console.error('Erro ao copiar:', err);
+        showMessage('Não foi possível copiar automaticamente. Copie manualmente o endereço.', 'warning');
+    }
+    
+    document.body.removeChild(textArea);
+}
+
+function showCopySuccess() {
+    const button = event.target.closest('button');
+    const originalHTML = button.innerHTML;
+    
+    button.innerHTML = '<i class="fas fa-check"></i> Copiado!';
+    button.classList.remove('btn-outline-primary');
+    button.classList.add('btn-success');
+    
+    setTimeout(() => {
+        button.innerHTML = originalHTML;
+        button.classList.remove('btn-success');
+        button.classList.add('btn-outline-primary');
+    }, 2000);
+    
+    showMessage('📋 Endereço copiado para a área de transferência!', 'success');
+}
