@@ -2,23 +2,23 @@
 // CONFIGURAÇÃO PARA VERCEL
 // =============================
 // Este arquivo é usado quando o projeto roda no Vercel
-// As variáveis de ambiente são injetadas automaticamente
 
 // Função para detectar se está rodando no Vercel
 function isVercel() {
     return window.location.hostname.includes('vercel.app') ||
         window.location.hostname.includes('vercel.com') ||
-        window.location.hostname !== 'localhost' &&
-        window.location.hostname !== '127.0.0.1';
+        (window.location.hostname !== 'localhost' &&
+            window.location.hostname !== '127.0.0.1' &&
+            window.location.hostname !== '');
 }
 
-// Configuração para Vercel (usando variáveis de ambiente)
+// Configuração para VERCEL (com valores reais - será substituído no build)
 const CONFIG_VERCEL = {
     google: {
-        // No Vercel, estas variáveis são definidas no painel do Vercel
-        apiKey: 'GOOGLE_API_KEY_PLACEHOLDER',
-        spreadsheetId: 'GOOGLE_SPREADSHEET_ID_PLACEHOLDER',
-        webAppUrl: 'GOOGLE_WEB_APP_URL_PLACEHOLDER',
+        // Valores que serão injetados durante o build do Vercel
+        apiKey: 'AIzaSyBW98wPFQdj5DscddMnWNG3TBQptj69uPI',
+        spreadsheetId: '1LNBNy1JVLOdlsiBMI0okZjj-7jfa9G-npLdwLzpvX8Y',
+        webAppUrl: 'https://script.google.com/macros/s/AKfycbxjMP4PkKniGUG4is7f7pwf_sHELCz4zUZMzqZeg5AMOmeqUuvqTW21KSDrn1h1Fh61/exec',
 
         sheets: {
             convidados: 'convidados!A1:C200',
@@ -27,16 +27,16 @@ const CONFIG_VERCEL = {
     },
 
     admin: {
-        password: 'ADMIN_PASSWORD_PLACEHOLDER'
+        password: 'admin123'
     },
 
     delivery: {
         address: {
-            street: 'DELIVERY_STREET_PLACEHOLDER',
-            complement: 'DELIVERY_COMPLEMENT_PLACEHOLDER',
-            city: 'DELIVERY_CITY_PLACEHOLDER',
-            state: 'DELIVERY_STATE_PLACEHOLDER',
-            zipCode: 'DELIVERY_ZIP_PLACEHOLDER'
+            street: 'R. Canes, 159 - Jardim dos Veleiros',
+            complement: '',
+            city: 'São Paulo',
+            state: 'SP',
+            zipCode: '04858-010'
         }
     }
 };
@@ -44,9 +44,11 @@ const CONFIG_VERCEL = {
 // Sistema inteligente de configuração
 if (typeof CONFIG === 'undefined') {
     if (isVercel()) {
-        // No Vercel, usar as configurações com placeholders que serão substituídos
+        // No Vercel, usar as configurações já com os valores corretos
         window.CONFIG = CONFIG_VERCEL;
-        console.log('🚀 Modo Vercel detectado - usando variáveis de ambiente');
+        console.log('🚀 Modo Vercel detectado - usando configuração fixa');
+        console.log('📊 Spreadsheet ID:', CONFIG_VERCEL.google.spreadsheetId);
+        console.log('🔑 API Key configured:', CONFIG_VERCEL.google.apiKey ? '✅' : '❌');
     } else {
         // Localmente, tentar carregar config.js
         console.warn('⚠️ Config.js não encontrado e não está no Vercel');

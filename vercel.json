@@ -9,6 +9,5 @@
             "key": "Cache-Control",
             "value": "public, max-age=0, must-revalidate"
         }]
-    }],
-    "buildCommand": "node replace-env-vars.js"
+    }]
 }
