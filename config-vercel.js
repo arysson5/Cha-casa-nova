@@ -33,11 +33,11 @@ const CONFIG_VERCEL = {
 
     delivery: {
         address: {
-            street: 'R. Canes, 159 - Jardim dos Veleiros',
-            complement: '',
+            street: 'R. Canes, 18 - Veleiros',
+            complement: 'Bloco 1, apto 306',
             city: 'São Paulo',
             state: 'SP',
-            zipCode: '04858-010'
+            zipCode: '04773040'
         }
     }
 };
