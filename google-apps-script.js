@@ -1,19 +1,29 @@
 /**
- * GOOGLE APPS SCRIPT PARA SISTEMA DE PRESENTES
+ * =============================
+ * GOOGLE APPS SCRIPT - API PARA CHAVES DE PRESENTES
+ * =============================
  * 
- * COMO USAR:
- * 1. Acesse: https://script.google.com
- * 2. Clique em "Novo projeto"
- * 3. Cole este código
- * 4. Configure a planilha ID na linha 15
- * 5. Salve e publique como Web App
- * 6. Copie a URL gerada e use no seu site
+ * ⚠️ INSTRUÇÕES DE CONFIGURAÇÃO:
+ * 
+ * 1. Configure o SPREADSHEET_ID abaixo com o ID da sua planilha
+ * 2. Configure os ALLOWED_ORIGINS com seus domínios
+ * 3. Publique como Web App com acesso "Qualquer pessoa"
+ * 4. Copie a URL da implementação para o arquivo config.js do seu site
+ * 
+ * 📋 Como encontrar o ID da planilha:
+ * - URL: https://docs.google.com/spreadsheets/d/SEU_ID_AQUI/edit
+ * - Copie apenas a parte "SEU_ID_AQUI"
  */
 
 // =============================
-// CONFIGURAÇÕES
+// CONFIGURAÇÃO
 // =============================
-const SPREADSHEET_ID = '1LNBNy1JVLOdlsiBMI0okZjj-7jfa9G-npLdwLzpvX8Y'; // Sua planilha
+
+// ⚠️ IMPORTANTE: Configure o ID da sua planilha aqui
+// Para encontrar o ID da planilha:
+// 1. Abra sua planilha no Google Sheets
+// 2. Copie o ID da URL: https://docs.google.com/spreadsheets/d/SEU_ID_AQUI/edit
+const SPREADSHEET_ID = 'INSIRA_SEU_SPREADSHEET_ID_AQUI'; // Substitua pelo ID da sua planilha
 const ALLOWED_ORIGINS = [
     'http://localhost',
     'https://localhost',

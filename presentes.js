@@ -1,19 +1,27 @@
 // =============================
 // CONFIGURAÇÕES GOOGLE SHEETS
 // =============================
+
+// Verificar se o arquivo de configuração foi carregado
+if (typeof CONFIG === 'undefined') {
+    console.error('❌ ERRO: Arquivo config.js não encontrado!');
+    console.error('📋 SOLUÇÃO: Copie config.example.js para config.js e configure suas credenciais');
+    alert('⚠️ ERRO DE CONFIGURAÇÃO\n\nArquivo config.js não encontrado!\n\n📋 Solução:\n1. Copie config.example.js para config.js\n2. Configure suas credenciais no arquivo config.js');
+}
+
 const GOOGLE_CONFIG = {
-    // Google Apps Script (Nova API melhorada)
-    webAppUrl: 'https://script.google.com/macros/s/AKfycbxjMP4PkKniGUG4is7f7pwf_sHELCz4zUZMzqZeg5AMOmeqUuvqTW21KSDrn1h1Fh61/exec',
+    // Google Apps Script (Nova API melhorada) - vem do config.js
+    webAppUrl: CONFIG && CONFIG.google && CONFIG.google.webAppUrl ? CONFIG.google.webAppUrl : '',
 
-    // Fallback para API Key (somente leitura)
-    apiKey: 'AIzaSyBW98wPFQdj5DscddMnWNG3TBQptj69uPI',
-    spreadsheetId: '1LNBNy1JVLOdlsiBMI0okZjj-7jfa9G-npLdwLzpvX8Y',
+    // Fallback para API Key (somente leitura) - vem do config.js
+    apiKey: CONFIG && CONFIG.google && CONFIG.google.apiKey ? CONFIG.google.apiKey : '',
+    spreadsheetId: CONFIG && CONFIG.google && CONFIG.google.spreadsheetId ? CONFIG.google.spreadsheetId : '',
 
-    // Abas da planilha (limitadas a 200 linhas para performance)
-    sheets: {
-        convidados: 'convidados!A1:C200', // Nome, Email, Quantidade
-        presentes: 'Presentes!A1:D200', // Nome, URL, Preço, Foto
-        escolhidos: 'Escolhidos!A1:C200' // Email, Nome, Presente
+    // Abas da planilha - vem do config.js
+    sheets: CONFIG && CONFIG.google && CONFIG.google.sheets ? CONFIG.google.sheets : {
+        convidados: 'convidados!A1:C200',
+        presentes: 'Presentes!A1:D200',
+        escolhidos: 'Escolhidos!A1:C200'
     }
 };
 
@@ -40,6 +48,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Event Listeners
     setupEventListeners();
+
+    // Carregar endereço de entrega
+    loadDeliveryAddress();
 
     // Verificar se usuário já está logado
     checkStoredLogin();
@@ -1938,10 +1949,58 @@ function showManualUnselectInstructions(giftName) {
     `, 'warning');
 }
 
-// Função para copiar endereço
+// =============================
+// FUNÇÕES DE CONFIGURAÇÃO DE ENDEREÇO
+// =============================
+
+// Carregar endereço de entrega do config.js
+function loadDeliveryAddress() {
+    const addressElement = document.getElementById('deliveryAddress');
+    
+    if (!addressElement) {
+        console.warn('Elemento deliveryAddress não encontrado');
+        return;
+    }
+    
+    // Verificar se config existe
+    if (!CONFIG || !CONFIG.delivery || !CONFIG.delivery.address) {
+        console.warn('Configuração de endereço não encontrada no config.js');
+        addressElement.innerHTML = `
+            <strong>📍 [Configure o endereço no config.js]</strong><br>
+            <strong>[Rua, número - bairro]</strong><br>
+            <strong>🏙️ [Cidade - Estado, CEP]</strong>
+        `;
+        return;
+    }
+    
+    const addr = CONFIG.delivery.address;
+    
+    // Preencher endereço dinamicamente
+    addressElement.innerHTML = `
+        <strong>📍 ${addr.street}</strong><br>
+        <strong>${addr.complement}</strong><br>
+        <strong>🏙️ ${addr.city}, CEP: ${addr.zipCode}</strong>
+    `;
+    
+    console.log('✅ Endereço de entrega carregado do config.js');
+}
+
+// Função para copiar endereço (atualizada para usar config)
 window.copyAddress = function() {
-    const address = `R. Canes, 18 - Veleiros
-São Paulo - SP, CEP: 04773-040`;
+    let address = '';
+    
+    // Tentar usar configuração
+    if (CONFIG && CONFIG.delivery && CONFIG.delivery.address) {
+        const addr = CONFIG.delivery.address;
+        address = `${addr.street}
+${addr.complement}
+${addr.city}, CEP: ${addr.zipCode}`;
+    } else {
+        // Fallback para endereço padrão
+        address = `[Configure o endereço no config.js]
+[Rua, número - bairro]
+[Cidade - Estado, CEP]`;
+    }
     
     if (navigator.clipboard && window.isSecureContext) {
         // Usar API moderna de clipboard

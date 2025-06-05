@@ -2,13 +2,21 @@
 
 ## 📋 Visão Geral
 
-Sistema integrado para gerenciamento de presentes do Chá de Casa Nova do Arysson & Nicole, conectado diretamente ao Google Sheets para controle em tempo real.
+Sistema integrado para gerenciamento de presentes do Chá de Casa Nova, conectado diretamente ao Google Sheets para controle em tempo real.
 
 ## 🔗 Configuração da Planilha
 
-### ID da Planilha
-- **ID**: `1LNBNy1JVLOdlsiBMI0okZjj-7jfa9G-npLdwLzpvX8Y`
-- **Chave API**: `AIzaSyBW98wPFQdj5DscddMnWNG3TBQptj69uPI`
+### ⚠️ CONFIGURAÇÃO SEGURA
+As credenciais agora estão protegidas no arquivo `config.js`:
+
+- **ID da Planilha**: Configure no `config.js`
+- **Chave API**: Configure no `config.js`
+- **URL Apps Script**: Configure no `config.js`
+
+### 📋 Como Configurar:
+1. Copie `config.example.js` para `config.js`
+2. Edite `config.js` com suas credenciais reais
+3. O arquivo `config.js` está no `.gitignore` e não será commitado
 
 ### Estrutura das Abas
 
@@ -183,7 +191,7 @@ nicole@email.com         | Nicole Santos | Jogo de Cama Casal
 **Problema**: Sistema não consegue salvar dados (presentes, escolhas)
 **Causa**: Planilha sem permissão de edição pública
 **Solução**:
-1. Abra a planilha: https://docs.google.com/spreadsheets/d/1LNBNy1JVLOdlsiBMI0okZjj-7jfa9G-npLdwLzpvX8Y/edit
+1. Abra sua planilha (ID configurado no config.js)
 2. Clique em **"Compartilhar"** (botão azul no canto superior direito)
 3. Em **"Obter link"**, altere de "Visualizador" para **"Editor"**
 4. Certifique-se que está como **"Qualquer pessoa com o link"**
@@ -213,8 +221,8 @@ Para dúvidas ou problemas:
 ---
 
 ### API Key do Google
-- **Atual:** `AIzaSyBW98wPFQdj5DscddMnWNG3TBQptj69uPI`
-- **Status:** Configurada nos arquivos `presentes.js` e `admin-presentes.js`
+- **Configuração:** Definida no arquivo `config.js`
+- **Status:** Protegida e não commitada no repositório
 
 ### Permissões da Planilha
 1. A planilha deve estar com permissão **"Qualquer pessoa com o link pode ver"**

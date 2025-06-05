@@ -1,0 +1,20 @@
+{
+    "functions": {
+        "**/*.html": {
+            "runtime": "@vercel/static-build@1.0.0"
+        }
+    },
+    "rewrites": [
+        { "source": "/", "destination": "/presentes.html" },
+        { "source": "/admin", "destination": "/admin-presentes.html" }
+    ],
+    "headers": [{
+        "source": "/config-vercel.js",
+        "headers": [{
+            "key": "Cache-Control",
+            "value": "public, max-age=0, must-revalidate"
+        }]
+    }],
+    "buildCommand": "node replace-env-vars.js",
+    "outputDirectory": "."
+}

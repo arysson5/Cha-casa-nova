@@ -1,25 +1,33 @@
 // =============================
 // CONFIGURAÇÕES GOOGLE APPS SCRIPT
 // =============================
+
+// Verificar se o arquivo de configuração foi carregado
+if (typeof CONFIG === 'undefined') {
+    console.error('❌ ERRO: Arquivo config.js não encontrado!');
+    console.error('📋 SOLUÇÃO: Copie config.example.js para config.js e configure suas credenciais');
+    alert('⚠️ ERRO DE CONFIGURAÇÃO\n\nArquivo config.js não encontrado!\n\n📋 Solução:\n1. Copie config.example.js para config.js\n2. Configure suas credenciais no arquivo config.js');
+}
+
 const ADMIN_CONFIG = {
-    // URL do Google Apps Script (Nova API melhorada)
-    webAppUrl: 'https://script.google.com/macros/s/AKfycbxjMP4PkKniGUG4is7f7pwf_sHELCz4zUZMzqZeg5AMOmeqUuvqTW21KSDrn1h1Fh61/exec',
+    // URL do Google Apps Script (Nova API melhorada) - vem do config.js
+    webAppUrl: CONFIG && CONFIG.google && CONFIG.google.webAppUrl ? CONFIG.google.webAppUrl : '',
 
-    // Configurações de acesso
-    adminPassword: 'admin123', // Altere para uma senha mais segura
+    // Configurações de acesso - vem do config.js
+    adminPassword: CONFIG && CONFIG.admin && CONFIG.admin.password ? CONFIG.admin.password : 'admin123',
 
-    // Timeout para requisições
-    timeout: 15000, // 15 segundos
+    // Timeout para requisições - vem do config.js
+    timeout: CONFIG && CONFIG.admin && CONFIG.admin.timeout ? CONFIG.admin.timeout : 15000,
 
-    // Configuração de fallback para API Key (caso Apps Script falhe)
-    apiKey: 'AIzaSyBW98wPFQdj5DscddMnWNG3TBQptj69uPI',
-    spreadsheetId: '1LNBNy1JVLOdlsiBMI0okZjj-7jfa9G-npLdwLzpvX8Y',
+    // Configuração de fallback para API Key (caso Apps Script falhe) - vem do config.js
+    apiKey: CONFIG && CONFIG.google && CONFIG.google.apiKey ? CONFIG.google.apiKey : '',
+    spreadsheetId: CONFIG && CONFIG.google && CONFIG.google.spreadsheetId ? CONFIG.google.spreadsheetId : '',
 
-    // Abas da planilha (limitadas a 200 linhas para performance)
-    sheets: {
-        convidados: 'convidados!A1:C200', // Nome, Email, Quantidade
-        presentes: 'Presentes!A1:D200', // Nome, URL, Preço, Foto
-        escolhidos: 'Escolhidos!A1:C200' // Email, Nome, Presente
+    // Abas da planilha - vem do config.js
+    sheets: CONFIG && CONFIG.google && CONFIG.google.sheets ? CONFIG.google.sheets : {
+        convidados: 'convidados!A1:C200',
+        presentes: 'Presentes!A1:D200',
+        escolhidos: 'Escolhidos!A1:C200'
     }
 };
 
@@ -1209,3 +1217,13 @@ window.showAppsScriptFullInstructions = showAppsScriptFullInstructions;
 window.editGift = editGift;
 window.updateGift = updateGift;
 window.deleteGift = deleteGift;
+
+// Função para abrir planilha usando configuração segura
+window.abrirPlanilha = function() {
+    if (CONFIG && CONFIG.google && CONFIG.google.spreadsheetId) {
+        const url = `https://docs.google.com/spreadsheets/d/${CONFIG.google.spreadsheetId}/edit`;
+        window.open(url, '_blank');
+    } else {
+        alert('⚠️ Configuração não encontrada!\n\nVerifique se o arquivo config.js está configurado corretamente.');
+    }
+};

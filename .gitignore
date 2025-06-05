@@ -1,3 +1,27 @@
 .test-email.html
 .CONFIGURAR-EMAILS.MD
 .documentacao
+
+# Arquivos de configuração LOCAL com informações sensíveis
+config.js
+.env
+env.js
+config.local.js
+credentials.js
+
+# Arquivos de backup
+*.backup
+*.bak
+
+# Logs
+*.log
+
+# Arquivos temporários
+.tmp/
+temp/
+
+# Node modules (se houver)
+node_modules/
+
+# Vercel
+.vercel

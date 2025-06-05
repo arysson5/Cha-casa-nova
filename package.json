@@ -1,0 +1,23 @@
+{
+    "name": "lista-presentes-cha-casa-nova",
+    "version": "1.0.0",
+    "description": "Sistema de Lista de Presentes para Chá de Casa Nova - Integrado com Google Sheets",
+    "main": "presentes.html",
+    "scripts": {
+        "build": "node replace-env-vars.js",
+        "dev": "echo 'Para desenvolvimento local, abra presentes.html no navegador'",
+        "start": "echo 'Site estático - sem servidor necessário'"
+    },
+    "keywords": [
+        "cha-de-casa-nova",
+        "lista-presentes",
+        "google-sheets",
+        "html",
+        "javascript"
+    ],
+    "author": "Seu Nome",
+    "license": "MIT",
+    "engines": {
+        "node": ">=14.0.0"
+    }
+}

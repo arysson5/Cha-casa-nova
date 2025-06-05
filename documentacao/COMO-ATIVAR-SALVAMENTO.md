@@ -29,9 +29,9 @@ Sua API Key do Google Sheets **só permite leitura**, não escrita. Para salvar 
 - **Cole no editor** do Apps Script (substitua o código padrão)
 
 #### 1.3. Configurar a Planilha ID
-Na linha 15 do Apps Script, já está configurado:
+Na linha 15 do Apps Script, configure com o ID da sua planilha:
 ```javascript
-const SPREADSHEET_ID = '1LNBNy1JVLOdlsiBMI0okZjj-7jfa9G-npLdwLzpvX8Y';
+const SPREADSHEET_ID = 'SEU_ID_DA_PLANILHA_AQUI';
 ```
 
 #### 1.4. Salvar o Projeto

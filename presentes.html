@@ -30,6 +30,10 @@
 
     <!-- Google Sheets API -->
     <script src="https://apis.google.com/js/api.js"></script>
+
+    <!-- Configuração Híbrida (Vercel + Local) -->
+    <script src="config-vercel.js"></script>
+    <script src="config.js" onerror="console.log('ℹ️ Config.js local não encontrado - usando config-vercel.js')"></script>
 </head>
 
 <body>
@@ -115,10 +119,11 @@
                             <h5 class="mb-2">
                                 <i class="fas fa-shipping-fast"></i> Endereço para Entrega de Presentes
                             </h5>
-                            <p class="mb-2">
-                                <strong>📍 R. Canes, 18 - Veleiros </strong><br>
-                                <strong>Bloco 1, apto 306</strong><br>
-                                <strong>🏙️ São Paulo - SP, CEP: 04773-040</strong>
+                            <p class="mb-2" id="deliveryAddress">
+                                <!-- Endereço será carregado via JavaScript do config.js -->
+                                <strong>📍 [Endereço será carregado...]</strong><br>
+                                <strong>[Complemento...]</strong><br>
+                                <strong>🏙️ [Cidade - Estado, CEP]</strong>
                             </p>
                             <div class="row">
                                 <div class="col-md-8">
