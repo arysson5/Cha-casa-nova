@@ -1,9 +1,4 @@
 {
-    "functions": {
-        "**/*.html": {
-            "runtime": "@vercel/static-build@1.0.0"
-        }
-    },
     "rewrites": [
         { "source": "/", "destination": "/presentes.html" },
         { "source": "/admin", "destination": "/admin-presentes.html" }
@@ -15,6 +10,5 @@
             "value": "public, max-age=0, must-revalidate"
         }]
     }],
-    "buildCommand": "node replace-env-vars.js",
-    "outputDirectory": "."
+    "buildCommand": "node replace-env-vars.js"
 }
