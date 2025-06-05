@@ -340,6 +340,44 @@ function setupEventListeners() {
 // AUTENTICAÇÃO E LOGIN (SIMPLIFICADO)
 // =============================
 function checkStoredLogin() {
+    // Verificar se há um login automático vindo do index.html
+    const autoLogin = localStorage.getItem('autoLogin');
+    const guestEmail = localStorage.getItem('guestEmail');
+    const guestName = localStorage.getItem('guestName');
+
+    if (autoLogin === 'true' && guestEmail && guestName) {
+        console.log('🎯 Login automático detectado do formulário de confirmação');
+
+        // Limpar flags de auto login
+        localStorage.removeItem('autoLogin');
+        localStorage.removeItem('guestEmail');
+        localStorage.removeItem('guestName');
+
+        // Fazer login automático
+        currentUser = {
+            email: guestEmail.toLowerCase(),
+            name: guestName,
+            loginTime: new Date().toISOString(),
+            autoLogin: true
+        };
+
+        // Salvar no localStorage permanente
+        localStorage.setItem('giftListUser', JSON.stringify(currentUser));
+        isLoggedIn = true;
+
+        // Mostrar mensagem especial de boas-vindas
+        showMessage(`🎉 Bem-vindo, ${guestName}! Sua presença foi confirmada e você já está logado na lista de presentes!`, 'success');
+
+        // Mostrar seção de presentes
+        setTimeout(() => {
+            showGiftsSection();
+            loadGiftsData();
+        }, 1500);
+
+        return;
+    }
+
+    // Login normal (verificar localStorage)
     const storedUser = localStorage.getItem('giftListUser');
     if (storedUser) {
         try {

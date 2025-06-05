@@ -1028,11 +1028,161 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
+    <!-- Google Sheets API -->
+    <script src="https://apis.google.com/js/api.js"></script>
+
+    <!-- Configuração Híbrida (Vercel + Local) -->
+    <script src="config-vercel.js"></script>
+    <script src="config.js" onerror="console.log('ℹ️ Config.js local não encontrado - usando config-vercel.js')"></script>
+
     <script>
         // Inicializar EmailJS
         (function() {
             emailjs.init("_LSiXJKxCx1Xy1pRK"); // Substitua pela sua chave pública do EmailJS
         })();
+
+        // =============================
+        // INTEGRAÇÃO COM GOOGLE SHEETS
+        // =============================
+        let googleApiInitialized = false;
+
+        // Inicializar Google API
+        function initializeGoogleAPI() {
+            console.log('🔧 Inicializando Google API para confirmações...');
+
+            gapi.load('client', async() => {
+                try {
+                    await gapi.client.init({
+                        apiKey: CONFIG.google.apiKey,
+                        discoveryDocs: ['https://sheets.googleapis.com/$discovery/rest?version=v4']
+                    });
+
+                    console.log('✅ Google Sheets API inicializada para confirmações');
+                    googleApiInitialized = true;
+
+                } catch (error) {
+                    console.error('❌ Erro ao inicializar Google API:', error);
+                    googleApiInitialized = false;
+                }
+            });
+        }
+
+        // Salvar convidado na planilha
+        async function saveGuestToSheet(guestData) {
+            if (!googleApiInitialized) {
+                console.warn('⚠️ Google API não inicializada - pulando salvamento na planilha');
+                return false;
+            }
+
+            try {
+                console.log('💾 Salvando convidado na planilha...');
+
+                // Dados para adicionar na planilha
+                const values = [
+                    [guestData.name, guestData.email, guestData.count.toString()]
+                ];
+
+                const request = {
+                    spreadsheetId: CONFIG.google.spreadsheetId,
+                    range: 'convidados!A:C',
+                    valueInputOption: 'USER_ENTERED',
+                    insertDataOption: 'INSERT_ROWS',
+                    resource: {
+                        values: values
+                    }
+                };
+
+                const response = await gapi.client.sheets.spreadsheets.values.append(request);
+
+                if (response.status === 200) {
+                    console.log('✅ Convidado salvo na planilha com sucesso!');
+                    return true;
+                } else {
+                    throw new Error('Erro na resposta da API');
+                }
+
+            } catch (error) {
+                console.error('❌ Erro ao salvar na planilha:', error);
+                return false;
+            }
+        }
+
+        // Tentar salvar via Apps Script (se disponível)
+        async function saveGuestViaAppsScript(guestData) {
+            if (!CONFIG.google.webAppUrl) {
+                return false;
+            }
+
+            try {
+                console.log('📡 Tentando salvar via Apps Script...');
+
+                const params = new URLSearchParams();
+                params.append('action', 'addGuest');
+                params.append('name', guestData.name);
+                params.append('email', guestData.email);
+                params.append('count', guestData.count.toString());
+
+                const response = await fetch(CONFIG.google.webAppUrl + '?' + params.toString(), {
+                    method: 'GET'
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        console.log('✅ Convidado salvo via Apps Script!');
+                        return true;
+                    }
+                }
+
+                throw new Error('Apps Script falhou');
+
+            } catch (error) {
+                console.log('⚠️ Apps Script não disponível, usando API direta');
+                return false;
+            }
+        }
+
+        // Salvar dados do convidado usando múltiplas estratégias
+        async function saveGuestData(guestData) {
+            console.log('💾 Salvando dados do convidado:', guestData);
+
+            // Tentar Apps Script primeiro
+            const appsScriptSuccess = await saveGuestViaAppsScript(guestData);
+            if (appsScriptSuccess) {
+                return true;
+            }
+
+            // Fallback para API direta
+            const apiSuccess = await saveGuestToSheet(guestData);
+            return apiSuccess;
+        }
+
+        // Função para redirecionar para presentes com login automático
+        function redirectToGiftsWithLogin(guestEmail, guestName) {
+            console.log('🎁 Redirecionando para lista de presentes...');
+
+            // Salvar dados no localStorage para login automático
+            localStorage.setItem('guestEmail', guestEmail);
+            localStorage.setItem('guestName', guestName);
+            localStorage.setItem('autoLogin', 'true');
+
+            // Redirecionar após um pequeno delay para o usuário ver a confirmação
+            setTimeout(() => {
+                window.location.href = 'presentes.html';
+            }, 2000);
+        }
+
+        // Inicializar Google API quando a página carregar
+        window.addEventListener('load', function() {
+            // Aguardar um pouco para garantir que CONFIG está disponível
+            setTimeout(() => {
+                if (typeof CONFIG !== 'undefined' && CONFIG.google) {
+                    initializeGoogleAPI();
+                } else {
+                    console.warn('⚠️ CONFIG não disponível para Google API');
+                }
+            }, 1000);
+        });
 
         // Countdown Timer
         function updateCountdown() {
@@ -1205,19 +1355,43 @@
                 confirmation_time: new Date().toLocaleString('pt-BR')
             };
 
-            // Função para enviar email único
-            async function sendEmail() {
-                try {
-                    console.log('Enviando email de confirmação...');
-                    await emailjs.send('service_b7abfpp', 'template_60shzvo', emailData);
-                    console.log('✅ Email enviado com sucesso!');
+            // Dados para salvar na planilha
+            const guestData = {
+                name: formData.guest_name,
+                email: formData.guest_email,
+                count: parseInt(formData.guest_count)
+            };
 
-                    // Sucesso
+            // Função principal para processar confirmação
+            async function processConfirmation() {
+                try {
+                    console.log('🎯 Processando confirmação de presença...');
+
+                    // 1. Salvar na planilha primeiro
+                    console.log('📊 Salvando na planilha...');
+                    const saved = await saveGuestData(guestData);
+
+                    if (saved) {
+                        console.log('✅ Dados salvos na planilha com sucesso!');
+                    } else {
+                        console.warn('⚠️ Não foi possível salvar na planilha, mas continuando...');
+                    }
+
+                    // 2. Enviar email de confirmação
+                    console.log('📧 Enviando email de confirmação...');
+                    try {
+                        await emailjs.send('service_b7abfpp', 'template_60shzvo', emailData);
+                        console.log('✅ Email enviado com sucesso!');
+                    } catch (emailError) {
+                        console.warn('⚠️ Erro ao enviar email:', emailError);
+                        // Continuar mesmo com erro no email
+                    }
+
+                    // 3. Sucesso - preparar redirecionamento
                     handleSuccess();
 
                 } catch (error) {
-                    console.error('❌ Erro ao enviar email:', error);
-
+                    console.error('❌ Erro no processamento:', error);
                     // Mesmo com erro, mostrar sucesso para o usuário
                     handleSuccess();
                 }
@@ -1227,19 +1401,40 @@
                 // Esconder loading
                 loadingMessage.style.display = 'none';
 
-                // Mostrar modal de presentes
-                setTimeout(() => {
-                    showGiftModal();
-                }, 1000);
+                // Mostrar mensagem de sucesso
+                successMessage.style.display = 'block';
+
+                // Adicionar botão especial para ir aos presentes
+                const giftReminder = document.getElementById('giftReminder');
+                if (giftReminder) {
+                    giftReminder.style.display = 'block';
+
+                    // Modificar o botão para fazer login automático
+                    const btnGiftCta = document.getElementById('btnGiftCta');
+                    if (btnGiftCta) {
+                        btnGiftCta.onclick = function(e) {
+                            e.preventDefault();
+                            console.log('🎁 Redirecionando para presentes com login automático...');
+                            redirectToGiftsWithLogin(guestData.email, guestData.name);
+                        };
+                    }
+                }
 
                 // Resetar formulário
-                document.getElementById('rsvpForm').reset();
-                submitBtn.disabled = false;
-                submitBtn.classList.remove('celebrating');
+                setTimeout(() => {
+                    document.getElementById('rsvpForm').reset();
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('celebrating');
+                }, 3000);
+
+                // Mostrar confetti
+                setTimeout(() => {
+                    createConfetti();
+                }, 500);
             }
 
-            // Executar envio do email
-            sendEmail();
+            // Executar processamento
+            processConfirmation();
         });
 
         // Make event details editable on double-click (for customization)
