@@ -22,7 +22,8 @@ const CONFIG_VERCEL = {
 
         sheets: {
             convidados: 'convidados!A1:C200',
-            presentes: 'presentes!A1:F200'
+            presentes: 'Presentes!A1:D200',
+            escolhidos: 'Escolhidos!A1:C200'
         }
     },
 
